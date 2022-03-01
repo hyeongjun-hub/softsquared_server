@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="928d9966-1ef5-45de-9e95-bc3a0cb8117a" name="woobi_server" url="https://woobi.shop">
+        <fileTransfer rootFolder="/var/www" accessType="SFTP" host="13.124.241.136" port="22" sshConfigId="01f5fa85-162b-44a9-b564-53a79a90a212" sshConfig="ubuntu@13.124.241.136:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
