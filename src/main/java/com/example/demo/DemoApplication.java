@@ -15,4 +15,5 @@ public class DemoApplication {
         System.out.println("HEAP Size(M) : "+ heapSize / (1024*1024) + " MB");
     }
 
+//    깃연동확인
 }
