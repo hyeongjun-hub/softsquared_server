@@ -2,7 +2,6 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
@@ -52,9 +51,9 @@ public class UserProvider {
                     }
 
 
-    public GetUserRes getUser(int userIdx) throws BaseException {
+    public GetUserRes getUser(int userId) throws BaseException {
         try {
-            GetUserRes getUserRes = userDao.getUser(userIdx);
+            GetUserRes getUserRes = userDao.getUser(userId);
             return getUserRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -69,7 +68,7 @@ public class UserProvider {
         }
     }
 
-    public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException{
+    public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException{
         User user = userDao.getPwd(postLoginReq);
         String encryptPwd;
         try {
@@ -79,9 +78,9 @@ public class UserProvider {
         }
 
         if(user.getPassword().equals(encryptPwd)){
-            int userIdx = user.getUserIdx();
-            String jwt = jwtService.createJwt(userIdx);
-            return new PostLoginRes(userIdx,jwt);
+            int userId = user.getUserId();
+            String jwt = jwtService.createJwt(userId);
+            return new PostLoginRes(userId,jwt);
         }
         else{
             throw new BaseException(FAILED_TO_LOGIN);
