@@ -23,12 +23,8 @@ public class ServiceController {
     @Autowired
     private final ServiceProvider serviceProvider;
 
-    @Autowired
-    private final ServiceDao serviceDao;
-
-    public ServiceController(ServiceProvider serviceProvider, ServiceDao serviceDao) {
+    public ServiceController(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
-        this.serviceDao = serviceDao;
     }
 
     @GetMapping("")

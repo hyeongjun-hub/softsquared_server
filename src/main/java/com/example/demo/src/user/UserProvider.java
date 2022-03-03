@@ -44,11 +44,10 @@ public class UserProvider {
         try{
             List<GetUserRes> getUsersRes = userDao.getUsersByEmail(email);
             return getUsersRes;
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-                    }
+    }
 
 
     public GetUserRes getUser(int userId) throws BaseException {

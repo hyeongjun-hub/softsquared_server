@@ -59,12 +59,12 @@ public class UserController {
 
     /**
      * 회원 1명 조회 API
-     * [GET] /users/:userIdx
+     * [GET] /users/:userId
      * @return BaseResponse<GetUserRes>
      */
     // Path-variable
     @ResponseBody
-    @GetMapping("/{userId}") // (GET) 127.0.0.1:9000/users/:userIdx
+    @GetMapping("/{userId}") // (GET) 127.0.0.1:9000/users/:userId
     public BaseResponse<GetUserRes> getUser(@PathVariable("userId") int userId) {
         // Get Users
         try{
