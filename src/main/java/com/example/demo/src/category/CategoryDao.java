@@ -29,9 +29,9 @@ public class CategoryDao {
         );
     }
 
-    public List<GetCategoryRes> getCategoriesByServiceId(String serviceId){
-        String getCategoryQuery = "select * from Category where serviceId = ?";
-        int getCategoryParams = Integer.parseInt(serviceId);
+    public List<GetCategoryRes> getCategoriesByServiceId(int serviceId){
+        String getCategoryQuery = "select categoryId, categoryName, categoryImageUrl, serviceId from Category where serviceId = ?";
+        int getCategoryParams = serviceId;
         return this.jdbcTemplate.query(getCategoryQuery,
                 (rs, rowNum) -> new GetCategoryRes(
                         rs.getInt("categoryId"),
@@ -40,5 +40,4 @@ public class CategoryDao {
                         rs.getInt("serviceId")
                 ), getCategoryParams);
     }
-
 }

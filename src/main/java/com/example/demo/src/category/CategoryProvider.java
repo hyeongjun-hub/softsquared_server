@@ -27,7 +27,7 @@ public class CategoryProvider {
         }
     }
 
-    public List<GetCategoryRes> getCategoriesByServiceId(String serviceId) throws BaseException{
+    public List<GetCategoryRes> getCategoriesByServiceId(int serviceId) throws BaseException{
         try{
             List<GetCategoryRes> getCategoriesRes = categoryDao.getCategoriesByServiceId(serviceId);
             return getCategoriesRes;

@@ -36,7 +36,7 @@ public class CategoryController {
     }
 
     @GetMapping("{serviceId}") // (GET) /categories/:serviceId
-    public BaseResponse<List<GetCategoryRes>> getCategoriesByServiceId(@PathVariable String serviceId){
+    public BaseResponse<List<GetCategoryRes>> getCategoriesByServiceId(@PathVariable int serviceId){
         try{
             List<GetCategoryRes> getCategoriesRes = categoryProvider.getCategoriesByServiceId(serviceId);
             return new BaseResponse<>(getCategoriesRes);
