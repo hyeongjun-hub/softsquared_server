@@ -30,6 +30,8 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 4016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,4017,"중복된 이메일입니다."),
 
+    // [POST] /reviews
+    POST_REVIEWS_EMPTY_CONTENT(false, 4030, "리뷰 내용을 입력해주세요."),
 
 
     /**
@@ -52,6 +54,7 @@ public enum BaseResponseStatus {
 
     //[PATCH] /users/{userIdx}
     MODIFY_FAIL_USERNAME(false,5014,"유저네임 수정 실패"),
+    EDIT_FAIL_CONTENT(false, 5015, "유저정보 수정 실패"),
 
     PASSWORD_ENCRYPTION_ERROR(false, 5011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 5012, "비밀번호 복호화에 실패하였습니다.");

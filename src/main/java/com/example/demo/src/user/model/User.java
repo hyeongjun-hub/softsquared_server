@@ -1,12 +1,10 @@
 package com.example.demo.src.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private int userId;
     private String userName;
@@ -14,7 +12,6 @@ public class User {
     private String password;
     private String profileImageUrl;
     private String phoneNumber;
-    private String baeminPayPassword;
     private int point;
     private String mailAccept;
     private String smsAccept;

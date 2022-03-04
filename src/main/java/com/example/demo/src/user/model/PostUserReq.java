@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PostUserReq {
     private String userName;
-//    private String id;
     private String userEmail;
     private String password;
 }

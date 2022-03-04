@@ -3,11 +3,13 @@ package com.example.demo.src.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class GetUserRes {
     private int userId;
     private String userName;
@@ -15,7 +17,6 @@ public class GetUserRes {
     private String password;
     private String profileImageUrl;
     private String phoneNumber;
-    private String baeminPayPassword;
     private int point;
     private String mailAccept;
     private String smsAccept;

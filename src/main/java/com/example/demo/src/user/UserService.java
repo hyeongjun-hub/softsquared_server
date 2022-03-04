@@ -57,11 +57,11 @@ public class UserService {
         }
     }
 
-    public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
+    public void editUser(int UserId, User user) throws BaseException {
         try{
-            int result = userDao.modifyUserName(patchUserReq);
+            int result = userDao.editUser(UserId, user);
             if(result == 0){
-                throw new BaseException(MODIFY_FAIL_USERNAME);
+                throw new BaseException(EDIT_FAIL_CONTENT);
             }
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
