@@ -60,7 +60,7 @@ public class CartController {
     }
 
     //Post (장바구니 삭제)
-    @PostMapping("{userCartId}/delete")
+    @PatchMapping("{userCartId}/delete")
     public BaseResponse<String> delCart(@PathVariable int userCartId) {
         try{
             cartService.delCart(userCartId);
