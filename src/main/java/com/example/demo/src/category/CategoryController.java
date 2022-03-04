@@ -16,12 +16,10 @@ public class CategoryController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final CategoryProvider categoryProvider;
-    private final CategoryDao categoryDao;
 
     @Autowired
     public CategoryController(CategoryProvider categoryProvider, CategoryDao categoryDao) {
         this.categoryProvider = categoryProvider;
-        this.categoryDao = categoryDao;
     }
 
     @GetMapping("") // (GET) /categories

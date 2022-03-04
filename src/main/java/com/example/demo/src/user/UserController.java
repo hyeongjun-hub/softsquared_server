@@ -154,7 +154,7 @@ public class UserController {
 //            if (userId != userIdByJwt) {
 //                return new BaseResponse<>(INVALID_USER_JWT);
 //            }
-//            //같다면 상태값 D로 변경
+            //같다면 상태값 D로 변경
             PostUserDelReq postUserDelReq = new PostUserDelReq(userId);
             userService.delUser(postUserDelReq);
 
