@@ -34,7 +34,7 @@ public class UserService {
     //POST
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
         //중복
-        if(userProvider.checkEmail(postUserReq.getUserEmail()) ==1){
+        if(userProvider.checkEmail(postUserReq.getUserEmail()) == 1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
 
@@ -58,6 +58,10 @@ public class UserService {
     }
 
     public void editUser(int UserId, User user) throws BaseException {
+        //중복
+        if(userProvider.checkEmail(user.getUserEmail()) == 1){
+            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+        }
         try{
             userDao.editUser(UserId, user);
 //            if(result == 0){
@@ -74,6 +78,30 @@ public class UserService {
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
-
     }
+
+    public int createAddress(int userId, PostAddressReq postAddressReq) throws BaseException {
+        try{
+            return userDao.createAddress(userId, postAddressReq);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void editAddress(int addressId, PatchAddressReq patchAddressReq) throws BaseException {
+        try{
+            userDao.editAddress(addressId, patchAddressReq);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void delAddress(int addressId) throws BaseException {
+        try{
+            userDao.delAddress(addressId);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }

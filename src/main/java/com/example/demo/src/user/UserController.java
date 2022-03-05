@@ -132,6 +132,9 @@ public class UserController {
     @ResponseBody
     @PatchMapping("/{userId}/detail")  // (GET) 127.0.0.1:9000/users/:userId
     public BaseResponse<String> editUser(@PathVariable("userId") int userId, @RequestBody User user) {
+        if (!isRegexEmail(user.getUserEmail())) {
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
         try {
 //            //jwt에서 idx 추출.
 //            int userIdByJwt = jwtService.getUserId();
@@ -169,5 +172,74 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{userId}/point")
+    public BaseResponse<Integer> getPoint(@PathVariable("userId") int userId) {
+        try {
+            int point = userProvider.getPoint(userId);
+            return new BaseResponse<>(point);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @GetMapping("/{userId}/coupon")
+    public BaseResponse<List<GetCouponRes>> getCoupons(@PathVariable("userId") int userId) {
+        try {
+            List<GetCouponRes> getCouponRes  = userProvider.getCoupons(userId);
+            return new BaseResponse<>(getCouponRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @GetMapping("/{userId}/present")
+    public BaseResponse<List<GetPresentRes>> getPresents(@PathVariable("userId") int userId) {
+        try {
+            List<GetPresentRes> getPresentRes  = userProvider.getPresents(userId);
+            return new BaseResponse<>(getPresentRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @GetMapping("/{userId}/address")
+    public BaseResponse<List<GetAddressRes>> getAddress(@PathVariable("userId") int userId) {
+        try {
+            List<GetAddressRes> getAddressRes  = userProvider.getAddress(userId);
+            return new BaseResponse<>(getAddressRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @PostMapping("/{userId}/address")
+    public BaseResponse<Integer> createAddress(@PathVariable("userId") int userId, @RequestBody PostAddressReq postAddressReq) {
+        try {
+            int addressId = userService.createAddress(userId, postAddressReq);
+            return new BaseResponse<>(addressId);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @PatchMapping("/{addressId}/address")
+    public BaseResponse<String> editAddress(@PathVariable("addressId") int addressId, @RequestBody PatchAddressReq patchAddressReq) {
+        try {
+            userService.editAddress(addressId, patchAddressReq);
+            return new BaseResponse<>("");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @PatchMapping("/{addressId}/address/delete")
+    public BaseResponse<String> delAddress(@PathVariable("addressId") int addressId) {
+        try {
+            userService.delAddress(addressId);
+            return new BaseResponse<>("");
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }

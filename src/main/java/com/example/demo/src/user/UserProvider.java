@@ -83,7 +83,44 @@ public class UserProvider {
         else{
             throw new BaseException(FAILED_TO_LOGIN);
         }
-
     }
 
+    public int getPoint(int userId) throws BaseException {
+        try{
+            int point = userDao.getPoint(userId);
+            return point;
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
+        }
+    }
+
+    public List<GetCouponRes> getCoupons(int userId) throws BaseException{
+        try{
+            List<GetCouponRes> getCouponRes = userDao.getCoupons(userId);
+            return getCouponRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetPresentRes> getPresents(int userId) throws BaseException{
+        try{
+            List<GetPresentRes> getPresentRes = userDao.getPresents(userId);
+            return getPresentRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetAddressRes> getAddress(int userId) throws BaseException{
+        try{
+            List<GetAddressRes> getAddressRes = userDao.getAddress(userId);
+            return getAddressRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

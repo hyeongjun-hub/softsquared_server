@@ -134,8 +134,71 @@ public class UserDao {
                 ),
                 getPwdParams
                 );
-
     }
 
+    public int getPoint(int userId) {
+        String getPointQuery = "select point from User where userId = ?";
+        int getPointParams = userId;
+        int point = this.jdbcTemplate.queryForObject(getPointQuery,  int.class, getPointParams);
+        return point;
+    }
 
+    public List<GetCouponRes> getCoupons(int userId) {
+        String getCouponsQuery = "select Coupon.couponId couponId, amount, priceMin, startDate, Coupon.deadline deadLine, orderMethod, Coupon.status status from Coupon inner join RestaurantCoupon RC on Coupon.restaurantCouponId = RC.restaurantCouponId inner join User U on Coupon.userId = U.userId where U.userId = ?";
+        int getCouponsParams = userId;
+        return this.jdbcTemplate.query(getCouponsQuery,
+                (rs, rowNum) -> new GetCouponRes(
+                        rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7)
+                ), getCouponsParams);
+    }
+
+    public List<GetPresentRes> getPresents(int userId) {
+        String getPresentsQuery = "select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = ?";
+        int getPresentsParams = userId;
+        return this.jdbcTemplate.query(getPresentsQuery,
+                (rs, rowNum) -> new GetPresentRes(
+                        rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getString(3),
+                        rs.getString(4)
+                ), getPresentsParams);
+    }
+
+    public List<GetAddressRes> getAddress(int userId) {
+        String getAddressQuery = "select Address.addressId, addressName, address, Address.status from Address inner join User U on Address.userId = U.userId where U.userId = ?";
+        int getAddressParams = userId;
+        return this.jdbcTemplate.query(getAddressQuery,
+                (rs, rowNum) -> new GetAddressRes(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4)
+                ), getAddressParams);
+    }
+
+    public int createAddress(int userId, PostAddressReq postAddressReq) {
+        String createAddressQuery = "INSERT INTO Address (addressName, address, userId) VALUES (?, ?, ?)";
+        Object[] createAddressParams = new Object[]{postAddressReq.getAddressName(), postAddressReq.getAddress(), userId};
+        this.jdbcTemplate.update(createAddressQuery, createAddressParams);
+
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
+    }
+
+    public void editAddress(int addressId, PatchAddressReq patchAddressReq) {
+        String editAddressQuery = "Update Address SET addressName = ?, address = ? WHERE addressId = ?";
+        Object[] editAddressParams = new Object[]{patchAddressReq.getAddressName(), patchAddressReq.getAddress(), addressId};
+        this.jdbcTemplate.update(editAddressQuery, editAddressParams);
+    }
+
+    public void delAddress(int addressId) {
+        String editAddressQuery = "Update Address SET status = 'D' WHERE addressId = ?";
+        this.jdbcTemplate.update(editAddressQuery, addressId);
+    }
 }
