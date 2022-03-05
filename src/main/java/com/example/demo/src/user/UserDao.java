@@ -102,15 +102,10 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
     }
 
-    public int editUser(int userId, User user){
-        String editUserQuery = "UPDATE User t SET t.userName = ?, t.profileImageUrl = ?, t.phoneNumber = ?, t.userEmail = ?, t.mailAccept = ?, t.smsAccept = ?, t.password  = ? WHERE t.userId = ?";
-        Object[] editUserParams = new Object[]{user.getUserName(), user.getProfileImageUrl(), user.getPhoneNumber(), user.getUserEmail(), user.getMailAccept().charAt(0), user.getSmsAccept().charAt(0), user.getPassword(), userId};
-
-        System.out.println("editUserQuery = " + editUserQuery);
-        for (int i = 0; i < editUserParams.length; i++) {
-            System.out.println("editUserParams = " + editUserParams[i]);
-        }
-        return this.jdbcTemplate.update(editUserQuery, editUserParams);
+    public void editUser(int userId, User user){
+        String editUserQuery = "UPDATE User SET userName = ?, userEmail = ? , password = ?, profileImageUrl=?, phoneNumber=?, mailAccept =?, smsAccept=? WHERE userId = ?";
+        Object[] editUserParams = new Object[]{user.getUserName(), user.getUserEmail(), user.getPassword(), user.getProfileImageUrl(), user.getPhoneNumber(), user.getMailAccept(), user.getSmsAccept() ,userId};
+        this.jdbcTemplate.update(editUserQuery, editUserParams);
     }
 
     public int delUser(PostUserDelReq postUserDelReq){
