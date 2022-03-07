@@ -35,7 +35,7 @@ public class CartDao {
 
     //GET
     public List<GetCartRes> getCart(int userCartId) {
-        String getCartQuery = "select UserCart.userCartId, restaurantName, menuImageUrl, menuName, M.price as menuPrice, additionalMenuName, AM.price as additionalMenuPrice, OD.amount, priceSum from UserCart inner join User U on UserCart.userId = U.userId inner join OrderDetail OD on UserCart.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId left Join Restaurant R on BM.restaurantId = R.restaurantId where UserCart.userCartId = ?";
+        String getCartQuery = "select UserCart.userCartId, restaurantName, menuImageUrl, menuName, M.price as menuPrice, additionalMenuName, AM.price as additionalMenuPrice, OD.amount, priceSum from UserCart inner join User U on UserCart.userId = U.userId inner join OrderDetail OD on UserCart.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId left Join Restaurant R on BM.restaurantId = R.restaurantId where UserCart.userCartId = ? and UserCart.status = 'Y'";
         int getCartParams = userCartId;
         return this.jdbcTemplate.query(getCartQuery,
                 (rs, rowNum) -> new GetCartRes(
@@ -70,7 +70,7 @@ public class CartDao {
     }
 
     public void updateCartAdditional(int orderDetailId, int userCartId) {
-        String calculationQuery = "select AM.price * OrderDetail.amount from OrderDetail left join AdditionalMenu AM on OrderDetail.additionalMenuId = AM.additionalMenuId where OrderDetailId = ?";
+        String calculationQuery = "select AM.price * OrderDetail.amount from OrderDetail left join AdditionalMenu AM on OrderDetail.additionalMenuId = AM.additionalMenuId where OrderDetailId = ? and OrderDetailId.status = 'Y'";
         int priceSum = this.jdbcTemplate.queryForObject(calculationQuery, int.class, orderDetailId);
         System.out.println("priceSum = " + priceSum);
         String updateCartQuery = "Update UserCart set priceSum = priceSum + ? where userCartId = ?";

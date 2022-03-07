@@ -18,7 +18,7 @@ public class ServiceDao {
     }
 
     public List<GetServiceRes> getServices(){
-        String getServicesQuery = "select * from Service";
+        String getServicesQuery = "select * from Service where status = 'Y'";
         return this.jdbcTemplate.query(getServicesQuery,
                 (rs, rowNum) -> new GetServiceRes(
                         rs.getInt("serviceId"),

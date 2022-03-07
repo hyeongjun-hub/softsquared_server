@@ -18,7 +18,7 @@ public class CategoryDao {
     }
 
     public List<GetCategoryRes> getCategories(){
-        String getCategoriesQuery = "select * from Category";
+        String getCategoriesQuery = "select * from Category where status 'Y'";
         return this.jdbcTemplate.query(getCategoriesQuery,
                 (rs, rowNum) -> new GetCategoryRes(
                         rs.getInt("categoryId"),
@@ -30,7 +30,7 @@ public class CategoryDao {
     }
 
     public List<GetCategoryRes> getCategoriesByServiceId(int serviceId){
-        String getCategoryQuery = "select categoryId, categoryName, categoryImageUrl, serviceId from Category where serviceId = ?";
+        String getCategoryQuery = "select categoryId, categoryName, categoryImageUrl, serviceId from Category where serviceId = ? and status='Y'";
         int getCategoryParams = serviceId;
         return this.jdbcTemplate.query(getCategoryQuery,
                 (rs, rowNum) -> new GetCategoryRes(

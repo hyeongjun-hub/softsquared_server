@@ -23,7 +23,7 @@ public class ReviewDao {
     }
 
     public List<GetReviewRes> getMyReviews(int userId) {
-        String getMyReviewsQuery = "select Review.reviewId, restaurantName, Review.content myReview, Review.imageUrl imageUrl, Review.star star, Review.isOwner isOwner, Review.updatedAt myUpdatedAt, PR.content ownerReview, PR.updatedAt ownerUpdatedAt from Review inner join OrderList OL on Review.orderListId = OL.orderListId inner join UserCart UC on OL.userCartID = UC.userCartId left join Restaurant R on Review.restaurantId = R.restaurantId left join Review PR on Review.reviewId = PR.postReviewId where userId = ?";
+        String getMyReviewsQuery = "select Review.reviewId, restaurantName, Review.content myReview, Review.imageUrl imageUrl, Review.star star, Review.isOwner isOwner, Review.updatedAt myUpdatedAt, PR.content ownerReview, PR.updatedAt ownerUpdatedAt from Review inner join OrderList OL on Review.orderListId = OL.orderListId inner join UserCart UC on OL.userCartID = UC.userCartId left join Restaurant R on Review.restaurantId = R.restaurantId left join Review PR on Review.reviewId = PR.postReviewId where userId = ? and Review.status = 'Y'";
         int getMyReviewsParams = userId;
         return this.jdbcTemplate.query(getMyReviewsQuery,
                 (rs, rowNum) -> new GetReviewRes(

@@ -14,4 +14,5 @@ public class GetOrderRes {
     private String menuName;
     private int finalPrice;
     private String createdAt;
+    private String status;
 }

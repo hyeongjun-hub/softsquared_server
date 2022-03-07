@@ -18,7 +18,7 @@ public class MenuDao {
     }
 
     public List<GetMenuRes> getMenu(int menuId){
-        String getMenuQuery = "select Menu.menuId as menuId, menuName, menuDetail, Menu.price as menuPrice, menuImageUrl, bigAdditionalMenuName, maxSelect, additionalMenuName, AM.price as additionalMenuPrice from Menu inner join BigAdditionalMenu BAM on Menu.menuId = BAM.menuId inner join AdditionalMenu AM on BAM.bigAdditionalMenuId = AM.bigAdditionalMenuId where Menu.menuId = ?";
+        String getMenuQuery = "select Menu.menuId as menuId, menuName, menuDetail, Menu.price as menuPrice, menuImageUrl, bigAdditionalMenuName, maxSelect, additionalMenuName, AM.price as additionalMenuPrice from Menu inner join BigAdditionalMenu BAM on Menu.menuId = BAM.menuId inner join AdditionalMenu AM on BAM.bigAdditionalMenuId = AM.bigAdditionalMenuId where Menu.menuId = ? and Menu.status = 'Y'";
         int getMenuParams = menuId;
         return this.jdbcTemplate.query(getMenuQuery,
                 (rs, rowNum) -> new GetMenuRes(

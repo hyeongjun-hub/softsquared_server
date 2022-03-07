@@ -37,7 +37,7 @@ public class OrderDao {
     }
 
     public List<GetOrderRes> getOrders(int userId) {
-        String getOrdersQuery = "select distinct OrderList.orderListId as orderListId, avatarUrl, restaurantName, menuName, finalPrice, OrderList.createdAt as createdAt from OrderList inner join UserCart UC on OrderList.userCartID = UC.userCartId inner join OrderDetail OD on UC.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId inner join BigMenu BM on M.bigMenuId = BM.bigMenuId inner join Address A on OrderList.addressId = A.addressId inner join Restaurant R on BM.restaurantId = R.restaurantId inner join User U on UC.userId = U.userId where UC.userId = ?";
+        String getOrdersQuery = "select distinct OrderList.orderListId as orderListId, avatarUrl, restaurantName, menuName, finalPrice, CASE WHEN TIMESTAMPDIFF(DAY, OrderList.createdAt, CURRENT_TIMESTAMP)<7 and TIMESTAMPDIFF(DAY, OrderList.createdAt, CURRENT_TIMESTAMP)>=1 THEN CONCAT(TIMESTAMPDIFF(DAY, OrderList.createdAt, CURRENT_TIMESTAMP), '일전') WHEN TIMESTAMPDIFF(DAY, OrderList.createdAt, CURRENT_TIMESTAMP)<1 THEN CONCAT(TIMESTAMPDIFF(HOUR, OrderList.createdAt, CURRENT_TIMESTAMP),'시간전') ELSE CONCAT(DATE_FORMAT(OrderList.createdAt, '%m/%d'), CASE WHEN DATE_FORMAT(OrderList.createdAt, '%w')=0 THEN ' (일)' WHEN DATE_FORMAT(OrderList.createdAt, '%w')=1 THEN ' (월)' WHEN DATE_FORMAT(OrderList.createdAt, '%w')=2 THEN ' (화)' WHEN DATE_FORMAT(OrderList.createdAt, '%w')=3 THEN ' (수)' WHEN DATE_FORMAT(OrderList.createdAt, '%w')=4 THEN ' (목)' WHEN DATE_FORMAT(OrderList.createdAt, '%w')=5 THEN ' (금)' ELSE ' (토)' END ) END as createdAt, OrderList.status from OrderList inner join UserCart UC on OrderList.userCartID = UC.userCartId inner join OrderDetail OD on UC.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId inner join BigMenu BM on M.bigMenuId = BM.bigMenuId inner join Address A on OrderList.addressId = A.addressId inner join Restaurant R on BM.restaurantId = R.restaurantId inner join User U on UC.userId = U.userId where UC.userId = ?";
         int getOrdersParams = userId;
         return this.jdbcTemplate.query(getOrdersQuery,
                 (rs, rowNum) -> new GetOrderRes(
@@ -46,13 +46,14 @@ public class OrderDao {
                         rs.getString(3),
                         rs.getString(4),
                         rs.getInt(5),
-                        rs.getString(6)
+                        rs.getString(6),
+                        rs.getString(7)
                 ), getOrdersParams
         );
     }
 
     public List<GetOrderDetailRes> getOrder(int orderListId) {
-        String getOrderQuery = "select distinct OrderList.orderListId as orderListId, (IfNULL(M.price,0) + IFNULL(AM.price, 0)) as price, OD.amount, restaurantName, menuName, additionalMenuName, finalPrice, OrderList.createdAt as createdAt, restaurantPhoneNumber, request, toRider, spoon, address, phoneNumber from OrderList inner join PaymentMethod PM on OrderList.paymentMethodId = PM.paymentMethodId inner join UserCart UC on OrderList.userCartID = UC.userCartId inner join OrderDetail OD on UC.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId inner join Address A on OrderList.addressId = A.addressId left join Restaurant R on BM.restaurantId = R.restaurantId inner join User U on UC.userId = U.userId where OrderListId = ?";
+        String getOrderQuery = "select distinct OrderList.orderListId as orderListId, (IfNULL(M.price,0) + IFNULL(AM.price, 0)) as price, OD.amount, restaurantName, menuName, additionalMenuName, finalPrice, DATE_FORMAT(OrderList.createdAt, '%Y년 %m월 %d일 %p %l:%s')as createdAt, deliveryAddress, restaurantPhoneNumber, request, toRider, spoon, address, phoneNumber from OrderList inner join PaymentMethod PM on OrderList.paymentMethodId = PM.paymentMethodId inner join UserCart UC on OrderList.userCartID = UC.userCartId inner join OrderDetail OD on UC.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId inner join Address A on OrderList.addressId = A.addressId left join Restaurant R on BM.restaurantId = R.restaurantId inner join User U on UC.userId = U.userId where OrderListId = ?";
         int getOrderParams = orderListId;
         System.out.println("getOrderQuery = " + getOrderQuery);
         System.out.println("getOrderParams = " + getOrderParams);

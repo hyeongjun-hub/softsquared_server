@@ -1,6 +1,5 @@
 package com.example.demo.src.user;
 
-
 import com.example.demo.src.user.model.entity.User;
 import com.example.demo.src.user.model.request.*;
 import com.example.demo.src.user.model.response.GetAddressRes;
@@ -26,7 +25,7 @@ public class UserDao {
     }
 
     public List<GetUserRes> getUsers(){
-        String getUsersQuery = "select * from User";
+        String getUsersQuery = "select * from User where status='Y'";
         return this.jdbcTemplate.query(getUsersQuery,
                 (rs,rowNum) -> new GetUserRes(
                         rs.getInt("userId"),
@@ -63,7 +62,7 @@ public class UserDao {
     }
 
     public GetUserRes getUser(int userId){
-        String getUserQuery = "select * from User where userId = ?";
+        String getUserQuery = "select * from User where userId = ? and status = 'Y'";
         int getUserParams = userId;
         return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs, rowNum) -> new GetUserRes(
@@ -171,7 +170,7 @@ public class UserDao {
     }
 
     public List<GetPresentRes> getPresents(int userId) {
-        String getPresentsQuery = "select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = ?";
+        String getPresentsQuery = "select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = ? and Present.status='Y'";
         int getPresentsParams = userId;
         return this.jdbcTemplate.query(getPresentsQuery,
                 (rs, rowNum) -> new GetPresentRes(
@@ -183,7 +182,7 @@ public class UserDao {
     }
 
     public List<GetAddressRes> getAddress(int userId) {
-        String getAddressQuery = "select Address.addressId, addressName, address, Address.status from Address inner join User U on Address.userId = U.userId where U.userId = ?";
+        String getAddressQuery = "select Address.addressId, addressName, address, Address.status from Address inner join User U on Address.userId = U.userId where U.userId = ? and Address.status = 'Y'";
         int getAddressParams = userId;
         return this.jdbcTemplate.query(getAddressQuery,
                 (rs, rowNum) -> new GetAddressRes(

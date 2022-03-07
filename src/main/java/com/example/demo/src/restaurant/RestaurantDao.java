@@ -20,7 +20,7 @@ public class RestaurantDao {
     }
 
     public List<GetRestaurantRes> getRestaurants(int categoryId) {
-        String getRestaurantsQuery = "select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, restaurantName, deliveryStart, deliveryEnd, deliveryMinMoney, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = ? group by Restaurant.restaurantId";
+        String getRestaurantsQuery = "select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, restaurantName, deliveryStart, deliveryEnd, deliveryMinMoney, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = ? and Restaurant.status='Y' group by Restaurant.restaurantId";
         int getRestaurantParams = categoryId;
         return this.jdbcTemplate.query(getRestaurantsQuery,
                 (rs, rowNum) -> new GetRestaurantRes(
@@ -41,7 +41,7 @@ public class RestaurantDao {
     }
 
     public List<GetRestaurantDetailRes> getRestaurantDetail(int restaurantId){
-        String getRestaurantDetailQuery = "select Restaurant.restaurantId, restaurantName, url, clean, deliveryMinMoney, paymentMethod,deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, takeOutMinMoney, orderMethod, cookingTimeStart, cookingTimeEnd, restaurantAddress, paymentMethodTO, M.menuDetail, bigMenuName, menuName, popular, menuSummary, menuImageUrl, price from Restaurant inner join BigMenu BM on Restaurant.restaurantId = BM.restaurantId inner join Menu M on BM.bigMenuId = M.bigMenuId left join RestaurantProfileImage RPI on Restaurant.restaurantId = RPI.restaurantId where Restaurant.restaurantId = ?";
+        String getRestaurantDetailQuery = "select Restaurant.restaurantId, restaurantName, url, clean, deliveryMinMoney, paymentMethod,deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, takeOutMinMoney, orderMethod, cookingTimeStart, cookingTimeEnd, restaurantAddress, paymentMethodTO, M.menuDetail, bigMenuName, menuName, popular, menuSummary, menuImageUrl, price from Restaurant inner join BigMenu BM on Restaurant.restaurantId = BM.restaurantId inner join Menu M on BM.bigMenuId = M.bigMenuId left join RestaurantProfileImage RPI on Restaurant.restaurantId = RPI.restaurantId where Restaurant.restaurantId = ? and Restaurant.status = 'Y'";
         int getRestaurantDetailParams = restaurantId;
         return this.jdbcTemplate.query(getRestaurantDetailQuery,
                 (rs, rowNum) -> new GetRestaurantDetailRes(
