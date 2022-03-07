@@ -1,6 +1,6 @@
 package com.example.demo.src.menu;
 
-import com.example.demo.src.menu.model.GetMenuRes;
+import com.example.demo.src.menu.model.response.GetMenuRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
 package com.example.demo.src.service;
 
-import com.example.demo.src.service.model.GetServiceRes;
+import com.example.demo.src.service.model.response.GetServiceRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -2,7 +2,11 @@ package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.review.model.*;
+import com.example.demo.src.review.model.request.PatchReviewReq;
+import com.example.demo.src.review.model.request.PostOwnerReviewReq;
+import com.example.demo.src.review.model.request.PostReviewReq;
+import com.example.demo.src.review.model.response.GetReviewRes;
+import com.example.demo.src.review.model.response.PostReviewRes;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

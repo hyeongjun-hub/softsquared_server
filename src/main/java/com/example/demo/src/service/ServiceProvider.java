@@ -1,7 +1,7 @@
 package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.service.model.GetServiceRes;
+import com.example.demo.src.service.model.response.GetServiceRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

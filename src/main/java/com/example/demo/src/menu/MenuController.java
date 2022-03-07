@@ -2,7 +2,7 @@ package com.example.demo.src.menu;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.menu.model.GetMenuRes;
+import com.example.demo.src.menu.model.response.GetMenuRes;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

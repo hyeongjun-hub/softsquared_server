@@ -1,8 +1,8 @@
 package com.example.demo.src.order;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.order.model.GetOrderDetailRes;
-import com.example.demo.src.order.model.GetOrderRes;
+import com.example.demo.src.order.model.response.GetOrderDetailRes;
+import com.example.demo.src.order.model.response.GetOrderRes;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

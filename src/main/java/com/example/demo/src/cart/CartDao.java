@@ -1,9 +1,8 @@
 package com.example.demo.src.cart;
 
-import com.example.demo.src.cart.model.GetCartRes;
-import com.example.demo.src.cart.model.PostAddAdditionalCartReq;
-import com.example.demo.src.cart.model.PostAddCartReq;
-import com.example.demo.src.cart.model.PostAddCartRes;
+import com.example.demo.src.cart.model.response.GetCartRes;
+import com.example.demo.src.cart.model.request.PostAddAdditionalCartReq;
+import com.example.demo.src.cart.model.request.PostAddCartReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

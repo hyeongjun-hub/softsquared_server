@@ -1,7 +1,7 @@
 package com.example.demo.src.cart;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.cart.model.GetCartRes;
+import com.example.demo.src.cart.model.response.GetCartRes;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,8 @@
 package com.example.demo.src.order;
 
-import com.example.demo.src.order.model.GetOrderDetailRes;
-import com.example.demo.src.order.model.GetOrderRes;
-import com.example.demo.src.order.model.PostOrderReq;
+import com.example.demo.src.order.model.response.GetOrderDetailRes;
+import com.example.demo.src.order.model.response.GetOrderRes;
+import com.example.demo.src.order.model.request.PostOrderReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

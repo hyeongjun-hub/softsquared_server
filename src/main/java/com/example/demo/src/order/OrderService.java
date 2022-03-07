@@ -1,7 +1,7 @@
 package com.example.demo.src.order;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.order.model.PostOrderReq;
+import com.example.demo.src.order.model.request.PostOrderReq;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

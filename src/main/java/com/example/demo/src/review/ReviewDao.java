@@ -1,10 +1,12 @@
 package com.example.demo.src.review;
 
-import com.example.demo.src.review.model.*;
+import com.example.demo.src.review.model.request.PatchReviewReq;
+import com.example.demo.src.review.model.request.PostReviewReq;
+import com.example.demo.src.review.model.response.GetReviewRes;
+import com.example.demo.src.review.model.response.PostReviewRes;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;

@@ -1,7 +1,12 @@
 package com.example.demo.src.user;
 
 
-import com.example.demo.src.user.model.*;
+import com.example.demo.src.user.model.entity.User;
+import com.example.demo.src.user.model.request.*;
+import com.example.demo.src.user.model.response.GetAddressRes;
+import com.example.demo.src.user.model.response.GetCouponRes;
+import com.example.demo.src.user.model.response.GetPresentRes;
+import com.example.demo.src.user.model.response.GetUserRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

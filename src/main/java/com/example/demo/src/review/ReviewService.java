@@ -1,10 +1,9 @@
 package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.review.model.PatchReviewReq;
-import com.example.demo.src.review.model.PostOwnerReviewReq;
-import com.example.demo.src.review.model.PostReviewReq;
-import com.example.demo.src.review.model.PostReviewRes;
+import com.example.demo.src.review.model.request.PatchReviewReq;
+import com.example.demo.src.review.model.request.PostReviewReq;
+import com.example.demo.src.review.model.response.PostReviewRes;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

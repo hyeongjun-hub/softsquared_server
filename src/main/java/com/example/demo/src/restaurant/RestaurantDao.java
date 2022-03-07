@@ -1,7 +1,7 @@
 package com.example.demo.src.restaurant;
 
-import com.example.demo.src.restaurant.model.GetRestaurantDetailRes;
-import com.example.demo.src.restaurant.model.GetRestaurantRes;
+import com.example.demo.src.restaurant.model.response.GetRestaurantDetailRes;
+import com.example.demo.src.restaurant.model.response.GetRestaurantRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
