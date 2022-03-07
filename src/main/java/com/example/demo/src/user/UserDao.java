@@ -8,6 +8,7 @@ import com.example.demo.src.user.model.response.GetCouponRes;
 import com.example.demo.src.user.model.response.GetPresentRes;
 import com.example.demo.src.user.model.response.GetUserRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -92,12 +93,15 @@ public class UserDao {
     }
 
     public int checkEmail(String email){
-        String checkEmailQuery = "select exists(select userEmail from User where userEmail = ?)";
-        String checkEmailParams = email;
-        return this.jdbcTemplate.queryForObject(checkEmailQuery,
-                int.class,
-                checkEmailParams);
-
+        try{
+            String checkEmailQuery = "select exists(select userEmail from User where userEmail = ?)";
+            String checkEmailParams = email;
+            return this.jdbcTemplate.queryForObject(checkEmailQuery,
+                    int.class,
+                    checkEmailParams);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
     }
 
     public int modifyUserName(PatchUserReq patchUserReq){
@@ -107,10 +111,10 @@ public class UserDao {
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
     }
 
-    public void editUser(int userId, User user){
+    public int editUser(int userId, User user){
         String editUserQuery = "UPDATE User SET userName = ?, userEmail = ? , password = ?, profileImageUrl=?, phoneNumber=?, mailAccept =?, smsAccept=? WHERE userId = ?";
         Object[] editUserParams = new Object[]{user.getUserName(), user.getUserEmail(), user.getPassword(), user.getProfileImageUrl(), user.getPhoneNumber(), user.getMailAccept(), user.getSmsAccept() ,userId};
-        this.jdbcTemplate.update(editUserQuery, editUserParams);
+        return this.jdbcTemplate.update(editUserQuery, editUserParams);
     }
 
     public int delUser(PostUserDelReq postUserDelReq){
@@ -119,26 +123,29 @@ public class UserDao {
         return this.jdbcTemplate.update(deleteUserQuery, deleteUserParams);
     }
 
-    public User getPwd(PostLoginReq postLoginReq){
-        String getPwdQuery = "select userId, password, userEmail, userName from User where userEmail = ?";
-        String getPwdParams = postLoginReq.getUserEmail();
-
-        return this.jdbcTemplate.queryForObject(getPwdQuery,
-                (rs,rowNum)-> new User(
-                        rs.getInt("userId"),
-                        rs.getString("userName"),
-                        rs.getString("userEmail"),
-                        rs.getString("password"),
-                        rs.getString("profileImageUrl"),
-                        rs.getString("phoneNumber"),
-                        rs.getInt("point"),
-                        rs.getString("mailAccept"),
-                        rs.getString("smsAccept"),
-                        rs.getString("grade"),
-                        rs.getString("status")
-                ),
-                getPwdParams
-                );
+    public User getLoginUser(PostLoginReq postLoginReq){
+        try {
+            String getPwdQuery = "select * from User where userEmail = ?";
+            String getPwdParams = postLoginReq.getUserEmail();
+            return this.jdbcTemplate.queryForObject(getPwdQuery,
+                    (rs, rowNum) -> new User(
+                            rs.getInt("userId"),
+                            rs.getString("userName"),
+                            rs.getString("userEmail"),
+                            rs.getString("password"),
+                            rs.getString("profileImageUrl"),
+                            rs.getString("phoneNumber"),
+                            rs.getInt("point"),
+                            rs.getString("mailAccept"),
+                            rs.getString("smsAccept"),
+                            rs.getString("grade"),
+                            rs.getString("status")
+                    ),
+                    getPwdParams
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public int getPoint(int userId) {
@@ -205,5 +212,10 @@ public class UserDao {
     public void delAddress(int addressId) {
         String editAddressQuery = "Update Address SET status = 'D' WHERE addressId = ?";
         this.jdbcTemplate.update(editAddressQuery, addressId);
+    }
+
+    public String getAddressStatus(int addressId) {
+        String getAddressStatusQuery = "SELECT status FROM Address WHERE addressId = ?";
+        return this.jdbcTemplate.queryForObject(getAddressStatusQuery, String.class, addressId);
     }
 }

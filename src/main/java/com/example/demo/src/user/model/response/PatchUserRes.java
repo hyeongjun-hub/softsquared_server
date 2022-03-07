@@ -1,4 +1,4 @@
-package com.example.demo.src.user.model.request;
+package com.example.demo.src.user.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostLoginReq {
-    private String userEmail;
-    private String password;
+public class PatchUserRes {
+    private int userId;
+    private String jwt;
 }
