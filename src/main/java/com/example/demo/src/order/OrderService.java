@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -16,9 +17,12 @@ public class OrderService {
 
     private OrderDao orderDao;
 
+    @Transactional
     public int createOrder(PostOrderReq postOrderReq) throws BaseException {
         try{
             int orderListId = orderDao.createOrder(postOrderReq);
+            // userCart의 status를 N으로 바꾸기
+            orderDao.updateStatus(postOrderReq.getUserCartId());
             orderDao.updatePrice(orderListId);
             return orderListId;
         } catch(Exception exception){

@@ -7,6 +7,7 @@ import com.example.demo.src.cart.model.request.PostAddCartReq;
 import com.example.demo.src.cart.model.response.GetCartRes;
 import com.example.demo.src.cart.model.response.PostAddCartRes;
 import com.example.demo.src.cart.model.response.PostCartRes;
+import com.example.demo.utils.JwtService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,12 @@ public class CartController {
 
     private final CartProvider cartProvider;
     private final CartService cartService;
+    private final JwtService jwtService;
 
-    @PostMapping("/{userId}/new")
-    public BaseResponse<PostCartRes> createCart(@PathVariable int userId) {
+    @PostMapping("/new")
+    public BaseResponse<PostCartRes> createCart() {
         try{
+            int userId = jwtService.getUserId();
             PostCartRes postCartRes = cartService.createCart(userId);
             return new BaseResponse<>(postCartRes);
         } catch(BaseException exception){

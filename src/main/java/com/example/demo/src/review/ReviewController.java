@@ -7,6 +7,7 @@ import com.example.demo.src.review.model.request.PostOwnerReviewReq;
 import com.example.demo.src.review.model.request.PostReviewReq;
 import com.example.demo.src.review.model.response.GetReviewRes;
 import com.example.demo.src.review.model.response.PostReviewRes;
+import com.example.demo.utils.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,12 @@ public class ReviewController {
 
     private final ReviewProvider reviewProvider;
     private final ReviewService reviewService;
+    private final JwtService jwtService;
 
-    @GetMapping("/{userId}")
-    public BaseResponse<List<GetReviewRes>> getMyReviews(@PathVariable("userId") int userId) {
+    @GetMapping("")
+    public BaseResponse<List<GetReviewRes>> getMyReviews() {
         try{
+            int userId = jwtService.getUserId();
             List<GetReviewRes> getReviewRes = reviewProvider.getMyReviews(userId);
             return new BaseResponse<>(getReviewRes);
         } catch (BaseException exception) {

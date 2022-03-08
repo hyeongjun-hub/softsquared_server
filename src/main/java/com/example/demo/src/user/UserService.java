@@ -108,6 +108,7 @@ public class UserService {
         if(this.checkEmail(postLoginReq.getUserEmail()) != 1){
             throw new BaseException(POST_USERS_NOT_EXISTS_EMAIL);
         }
+        //status 값 확인
         if (!user.getStatus().equals("Y")) {
             throw new BaseException(USERS_STATUS_NOT_Y);
         }

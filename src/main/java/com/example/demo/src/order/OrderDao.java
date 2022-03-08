@@ -28,6 +28,12 @@ public class OrderDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
+    public void updateStatus(int userCartId) {
+        String updateStatusQuery = "update UserCart set status = 'N' where UserCartId = ?";
+        int updateStatusParams = userCartId;
+        this.jdbcTemplate.update(updateStatusQuery, updateStatusParams);
+    }
+
     public void updatePrice(int orderListId) {
         String calculateQuery = "select GREATEST(Sum(priceSum) - IFNULL(amount,0) - IFNULL(price, 0), 0) as finalPrice from OrderList inner join UserCart UC on OrderList.userCartID = UC.userCartId left join Coupon C on OrderList.couponId = C.couponId left join RestaurantCoupon RC on C.restaurantCouponId = RC.restaurantCouponId left join Present P on OrderList.presentId = P.presentId where orderListId=?";
         int finalPrice = this.jdbcTemplate.queryForObject(calculateQuery, int.class, orderListId);

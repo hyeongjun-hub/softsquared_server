@@ -5,6 +5,8 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.order.model.response.GetOrderDetailRes;
 import com.example.demo.src.order.model.response.GetOrderRes;
 import com.example.demo.src.order.model.request.PostOrderReq;
+import com.example.demo.utils.JwtService;
+import io.jsonwebtoken.Jwt;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ public class OrderController {
 
     private final OrderProvider orderProvider;
     private final OrderService orderService;
+    private final JwtService jwtService;
 
     @PostMapping("/new")
     public BaseResponse<Integer> createOrder(@RequestBody PostOrderReq postOrderReq) {
@@ -31,9 +34,10 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{userId}/list")
-    public BaseResponse<List<GetOrderRes>> getOrders(@PathVariable("userId") int userId) {
+    @GetMapping("/list")
+    public BaseResponse<List<GetOrderRes>> getOrders() {
         try{
+            int userId = jwtService.getUserId();
             List<GetOrderRes> getOrderRes = orderProvider.getOrders(userId);
             return new BaseResponse<>(getOrderRes);
         } catch(BaseException exception){

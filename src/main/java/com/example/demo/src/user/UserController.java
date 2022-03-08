@@ -3,12 +3,14 @@ package com.example.demo.src.user;
 import com.example.demo.src.user.model.entity.User;
 import com.example.demo.src.user.model.request.*;
 import com.example.demo.src.user.model.response.*;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,22 +20,14 @@ import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
     private final UserProvider userProvider;
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final JwtService jwtService;
-
-    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService) {
-        this.userProvider = userProvider;
-        this.userService = userService;
-        this.jwtService = jwtService;
-    }
 
     /**
      * 회원 조회 API
@@ -44,7 +38,6 @@ public class UserController {
      * @return BaseResponse<List < GetUserRes>>
      */
     //Query String
-    @ResponseBody
     @GetMapping("/all") // (GET) 127.0.0.1:9000/users/all
     public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false) String Email) {
         // TODO : status check
@@ -66,7 +59,6 @@ public class UserController {
      *
      * @return BaseResponse<GetUserRes>
      */
-    @ResponseBody
     @GetMapping("") // (GET) 127.0.0.1:9000/users
     public BaseResponse<GetUserRes> getUser() {
         // Get User
@@ -87,7 +79,7 @@ public class UserController {
      * @return BaseResponse<PostUserRes>
      */
     // Body
-    @ResponseBody
+    @Transactional
     @PostMapping("")  // (POST) 127.0.0.1:9000/users
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
@@ -114,7 +106,7 @@ public class UserController {
      *
      * @return BaseResponse<PostLoginRes>
      */
-    @ResponseBody
+    @Transactional
     @PostMapping("/login")  // (POST) 127.0.0.1:9000/users/login
     public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
         if (!isRegexEmail(postLoginReq.getUserEmail())) {
@@ -139,7 +131,7 @@ public class UserController {
      */
 
     @ResponseBody
-    @PatchMapping("/detail")  // (GET) 127.0.0.1:9000/users/:userId
+    @PatchMapping("/detail")  // (GET) 127.0.0.1:9000/users/detail
     public BaseResponse<PatchUserRes> editUser(@RequestBody User user) {
         if (!isRegexEmail(user.getUserEmail())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
@@ -154,7 +146,7 @@ public class UserController {
         }
     }
 
-    @ResponseBody
+    @Transactional
     @PatchMapping("/delete")
     public BaseResponse<String> delUser() {
         try {
@@ -246,5 +238,14 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+//    @PatchMapping("/logout")
+//    public BaseResponse<> logout(){
+//        try{
+//
+//        } catch (BaseException exception) {
+//            return new BaseResponse<>(exception.getStatus());
+//        }
+//    }
 
 }
