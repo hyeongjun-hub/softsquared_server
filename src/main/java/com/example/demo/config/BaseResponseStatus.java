@@ -39,6 +39,9 @@ public enum BaseResponseStatus {
     // address
     ADDRESS_STATUS_NOT_Y(false, 4040, "삭제된 주소입니다."),
 
+    // cart
+    POST_CARTS_INVALID_MENU(false, 4080, "유효하지 않은 메뉴입니다."),
+
 
     /**
      * 4500 : 클라이언트 Response 오류

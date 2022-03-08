@@ -52,6 +52,9 @@ public class UserProvider {
 
 
     public GetUserRes getUser(int userId) throws BaseException {
+        if (!userDao.getUserStatus(userId).equals('Y')) {
+            throw new BaseException(USERS_STATUS_NOT_Y);
+        }
         try {
             GetUserRes getUserRes = userDao.getUser(userId);
             return getUserRes;

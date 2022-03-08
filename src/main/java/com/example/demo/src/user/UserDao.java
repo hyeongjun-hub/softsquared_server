@@ -217,4 +217,9 @@ public class UserDao {
         String getAddressStatusQuery = "SELECT status FROM Address WHERE addressId = ?";
         return this.jdbcTemplate.queryForObject(getAddressStatusQuery, String.class, addressId);
     }
+
+    public String getUserStatus(int userId) {
+        String getAddressStatusQuery = "SELECT status FROM User WHERE userId = ?";
+        return this.jdbcTemplate.queryForObject(getAddressStatusQuery, String.class, userId);
+    }
 }

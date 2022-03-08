@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.POST_CARTS_INVALID_MENU;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +30,9 @@ public class CartService {
     }
 
     public PostAddCartRes addMenu(int userCartId, PostAddCartReq postAddCartReq) throws BaseException {
+        if (postAddCartReq.getMenuId() == 0) {
+            throw new BaseException(POST_CARTS_INVALID_MENU);
+        }
         try{
             int orderDetailId = cartDao.addMenu(userCartId, postAddCartReq);
             System.out.println("orderDetailId = " + orderDetailId);
