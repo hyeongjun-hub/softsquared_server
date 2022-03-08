@@ -21,8 +21,12 @@ public class OrderService {
     public int createOrder(PostOrderReq postOrderReq) throws BaseException {
         try{
             int orderListId = orderDao.createOrder(postOrderReq);
-            // userCart의 status를 N으로 바꾸기
-            orderDao.updateStatus(postOrderReq.getUserCartId());
+            // userCart의 status를 N으로 변경
+            orderDao.updateCartStatus(postOrderReq.getUserCartId());
+            // coupon의 status를 N으로 변경
+            orderDao.updateCouponStatus(postOrderReq.getCouponId());
+            // present의 status를 N으로 변경
+            orderDao.updatePresentStatus(postOrderReq.getPresentId());
             orderDao.updatePrice(orderListId);
             return orderListId;
         } catch(Exception exception){

@@ -155,7 +155,7 @@ public class UserDao {
     }
 
     public List<GetCouponRes> getCoupons(int userId) {
-        String getCouponsQuery = "select Coupon.couponId couponId, amount, priceMin, startDate, Coupon.deadline deadLine, orderMethod, Coupon.status status from Coupon inner join RestaurantCoupon RC on Coupon.restaurantCouponId = RC.restaurantCouponId inner join User U on Coupon.userId = U.userId where U.userId = ?";
+        String getCouponsQuery = "select Coupon.couponId couponId, amount, priceMin, startDate, Coupon.deadline deadLine, orderMethod, Coupon.status status from Coupon inner join RestaurantCoupon RC on Coupon.restaurantCouponId = RC.restaurantCouponId inner join User U on Coupon.userId = U.userId where U.userId = ? and Coupon.status = 'Y'";
         int getCouponsParams = userId;
         return this.jdbcTemplate.query(getCouponsQuery,
                 (rs, rowNum) -> new GetCouponRes(

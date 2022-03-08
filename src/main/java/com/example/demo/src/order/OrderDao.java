@@ -28,10 +28,22 @@ public class OrderDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
-    public void updateStatus(int userCartId) {
-        String updateStatusQuery = "update UserCart set status = 'N' where UserCartId = ?";
-        int updateStatusParams = userCartId;
-        this.jdbcTemplate.update(updateStatusQuery, updateStatusParams);
+    public void updateCartStatus(int userCartId) {
+        String updateCartQuery = "update UserCart set status = 'N' where UserCartId = ?";
+        int updateCartParams = userCartId;
+        this.jdbcTemplate.update(updateCartQuery, updateCartParams);
+    }
+
+    public void updateCouponStatus(int couponId) {
+        String updateCouponQuery = "update Coupon set status = 'N' where couponId = ?";
+        int updateCouponParams = couponId;
+        this.jdbcTemplate.update(updateCouponQuery, updateCouponParams);
+    }
+
+    public void updatePresentStatus(int presentId) {
+        String updatePresentQuery = "update Present set status = 'N' where presentId = ?";
+        int updatePresentParams = presentId;
+        this.jdbcTemplate.update(updatePresentQuery, updatePresentParams);
     }
 
     public void updatePrice(int orderListId) {
