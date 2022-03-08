@@ -50,6 +50,9 @@ public class ReviewController {
 
     @PostMapping("/{reviewId}/owner")
     public BaseResponse<PostReviewRes> createOwnerReview(@PathVariable("reviewId") int reviewId, @RequestBody PostOwnerReviewReq postOwnerReviewReq) {
+        if (postOwnerReviewReq.getContent() == null) {
+            return new BaseResponse<>(POST_REVIEWS_EMPTY_CONTENT);
+        }
         try{
             PostReviewRes ownerReview = reviewService.createOwnerReview(reviewId, postOwnerReviewReq.getContent());
             return new BaseResponse<>(ownerReview);
@@ -70,6 +73,9 @@ public class ReviewController {
 
     @PatchMapping("/{reviewId}")
     public BaseResponse<String> editReview(@PathVariable("reviewId") int reviewId, @RequestBody PatchReviewReq patchReviewReq) {
+        if (patchReviewReq.getContent() == null) {
+            return new BaseResponse<>(POST_REVIEWS_EMPTY_CONTENT);
+        }
         try{
             reviewService.editReview(reviewId, patchReviewReq);
             return new BaseResponse<>("");

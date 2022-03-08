@@ -23,21 +23,23 @@ public enum BaseResponseStatus {
     INVALID_USER_JWT(false,4003,"권한이 없는 유저의 접근입니다."),
 
     // users
-    USERS_EMPTY_USER_ID(false, 4010, "유저 아이디 값을 확인해주세요."),
+    USERS_EMPTY_USER_ID(false, 4010, "유저 이메일 값을 확인해주세요."),
     USERS_STATUS_NOT_Y(false,4011, "삭제된 유저입이니다."),
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 4015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 4016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,4017,"중복된 이메일입니다."),
-    POST_USERS_PASSWORD_MIN(false, 4018, "비밀번호를 8자 이상 입력해주세요"),
-    POST_USERS_NOT_EXISTS_EMAIL(false, 4019, "없는 이메일입니다."),
+    POST_USERS_PASSWORD_MIN(false, 4018, "비밀번호를 8자 이상 입력하세요"),
+    POST_USERS_NOT_EXISTS_EMAIL(false, 4019, "없는 이메일입니다. 회원가입이 필요합니다."),
 
     // [POST] /reviews
     POST_REVIEWS_EMPTY_CONTENT(false, 4030, "리뷰 내용을 입력해주세요."),
 
     // address
-    ADDRESS_STATUS_NOT_Y(false, 4040, "삭제된 주소입니다."),
+    POST_ADDRESS_STATUS_NOT_Y(false, 4040, "삭제된 주소입니다."),
+    POST_ADDRESS_EXISTS_ADDRESS(false,4041,"중복된 주소입니다."),
+    POST_ADDRESS_EXISTS_ADDRESS_NAME(false,4042,"중복된 주소이름입니다."),
 
     // cart
     POST_CARTS_INVALID_MENU(false, 4080, "유효하지 않은 메뉴입니다."),

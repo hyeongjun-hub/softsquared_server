@@ -103,6 +103,31 @@ public class UserDao {
         }
     }
 
+    public int checkAddress(String address){
+        try{
+            String checkAddressQuery = "select exists(select address from Address where address = ?)";
+            String checkAddressParams = address;
+            return this.jdbcTemplate.queryForObject(checkAddressQuery,
+                    int.class,
+                    checkAddressParams);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    public int checkAddressName(String address){
+        try{
+            String checkAddressNameQuery = "select exists(select addressName from Address where addressName = ?)";
+            String checkAddressNameParams = address;
+            return this.jdbcTemplate.queryForObject(checkAddressNameQuery,
+                    int.class,
+                    checkAddressNameParams);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+
     public int modifyUserName(PatchUserReq patchUserReq){
         String modifyUserNameQuery = "update User set userName = ? where userId = ? ";
         Object[] modifyUserNameParams = new Object[]{patchUserReq.getUserName(), patchUserReq.getUserId()};
@@ -145,6 +170,12 @@ public class UserDao {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public int getUserId(int addressId){
+        String getUserIdQuery = "select userId from Address where addressId = ?";
+        int getUserIdParams = addressId;
+        return this.jdbcTemplate.queryForObject(getUserIdQuery, int.class, getUserIdParams);
     }
 
     public int getPoint(int userId) {

@@ -64,6 +64,10 @@ public class UserService {
         if(this.checkEmail(user.getUserEmail()) == 1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
+        //status 값 확인
+        if (!user.getStatus().equals("Y")) {
+            throw new BaseException(USERS_STATUS_NOT_Y);
+        }
         String pwd;
         try{
             //암호화
@@ -102,6 +106,22 @@ public class UserService {
         }
     }
 
+    public int checkAddress(String address) throws BaseException {
+        try {
+            return userDao.checkAddress(address);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int checkAddressName(String addressName) throws BaseException {
+        try {
+            return userDao.checkAddressName(addressName);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException{
         User user = userDao.getLoginUser(postLoginReq);
         //이메일 존재여부 확인
@@ -129,9 +149,16 @@ public class UserService {
         }
     }
 
-    // TODO : 중복된 주소
     // TODO : 주소이름 중복
     public int createAddress(int userId, PostAddressReq postAddressReq) throws BaseException {
+        // 주소 중복 확인
+        if(this.checkAddress(postAddressReq.getAddress()) == 1){
+            throw new BaseException(POST_ADDRESS_EXISTS_ADDRESS);
+        }
+        // 주소이름 중복 확인
+        if(this.checkAddressName(postAddressReq.getAddressName()) == 1){
+            throw new BaseException(POST_ADDRESS_EXISTS_ADDRESS_NAME);
+        }
         try{
             return userDao.createAddress(userId, postAddressReq);
         } catch(Exception exception){
@@ -139,20 +166,42 @@ public class UserService {
         }
     }
 
-    public void editAddress(int addressId, PatchAddressReq patchAddressReq) throws BaseException {
+    public int getUserId(int addressId) throws BaseException {
         try{
-            String addressStatus = userDao.getAddressStatus(addressId);
-            if (!addressStatus.equals("Y")) {
-                throw new BaseException(ADDRESS_STATUS_NOT_Y);
-            }
+            int userId = userDao.getUserId(addressId);
+            return userId;
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void editAddress(int addressId, PatchAddressReq patchAddressReq) throws BaseException {
+        String addressStatus = userDao.getAddressStatus(addressId);
+        //address status 값 확인
+        if (!addressStatus.equals("Y")) {
+            throw new BaseException(POST_ADDRESS_STATUS_NOT_Y);
+        }
+        //address 중복 확인
+        if(this.checkAddress(patchAddressReq.getAddress()) == 1){
+            throw new BaseException(POST_ADDRESS_EXISTS_ADDRESS);
+        }
+        // 주소이름 중복 확인
+        if(this.checkAddressName(patchAddressReq.getAddressName()) == 1){
+            throw new BaseException(POST_ADDRESS_EXISTS_ADDRESS_NAME);
+        }
+        try{
             userDao.editAddress(addressId, patchAddressReq);
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    // TODO : 이미 삭제되어있는지
     public void delAddress(int addressId) throws BaseException {
+        String addressStatus = userDao.getAddressStatus(addressId);
+        //address status 값 확인
+        if (!addressStatus.equals("Y")) {
+            throw new BaseException(POST_ADDRESS_STATUS_NOT_Y);
+        }
         try{
             userDao.delAddress(addressId);
         } catch(Exception exception){

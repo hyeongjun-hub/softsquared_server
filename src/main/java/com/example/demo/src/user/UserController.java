@@ -82,15 +82,16 @@ public class UserController {
     @Transactional
     @PostMapping("")  // (POST) 127.0.0.1:9000/users
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
-        // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
-        // TODO: 비밀번호 최소 길이
-        // TODO:
         if (postUserReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
         //이메일 정규표현
         if (!isRegexEmail(postUserReq.getUserEmail())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        // 비밀번호 최소길이
+        if (postUserReq.getPassword().length() < 8) {
+            return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
         try {
             PostUserRes postUserRes = userService.createUser(postUserReq);
@@ -109,9 +110,13 @@ public class UserController {
     @Transactional
     @PostMapping("/login")  // (POST) 127.0.0.1:9000/users/login
     public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
+        if (postLoginReq.getUserEmail() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
         if (!isRegexEmail(postLoginReq.getUserEmail())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
+        // 비밀번호 최소 길이
         if (postLoginReq.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
@@ -125,7 +130,7 @@ public class UserController {
 
     /**
      * 유저정보변경 API
-     * [PATCH] /users/:userIdx
+     * [PATCH] /users
      *
      * @return BaseResponse<String>
      */
@@ -133,8 +138,16 @@ public class UserController {
     @ResponseBody
     @PatchMapping("/detail")  // (GET) 127.0.0.1:9000/users/detail
     public BaseResponse<PatchUserRes> editUser(@RequestBody User user) {
+        if (user.getUserEmail() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        // 이메일 형식
         if (!isRegexEmail(user.getUserEmail())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        // 비밀번호 최소길이
+        if (user.getPassword().length() < 8) {
+            return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
         try {
             //jwt에서 id 추출.
@@ -219,9 +232,13 @@ public class UserController {
         }
     }
 
+    @Transactional
     @PatchMapping("/{addressId}/address")
     public BaseResponse<String> editAddress(@PathVariable("addressId") int addressId, @RequestBody PatchAddressReq patchAddressReq) {
         try {
+            if (jwtService.getUserId() != userService.getUserId(addressId)) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             userService.editAddress(addressId, patchAddressReq);
             return new BaseResponse<>("");
         } catch (BaseException exception) {
@@ -229,9 +246,13 @@ public class UserController {
         }
     }
 
+    @Transactional
     @PatchMapping("/{addressId}/address/delete")
     public BaseResponse<String> delAddress(@PathVariable("addressId") int addressId) {
         try {
+            if (jwtService.getUserId() != userService.getUserId(addressId)) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             userService.delAddress(addressId);
             return new BaseResponse<>("");
         } catch (BaseException exception) {
@@ -239,7 +260,7 @@ public class UserController {
         }
     }
 
-//    @PatchMapping("/logout")
+//    @PostMapping("/logout")
 //    public BaseResponse<> logout(){
 //        try{
 //
