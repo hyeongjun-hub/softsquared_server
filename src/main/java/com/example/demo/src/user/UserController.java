@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -39,14 +41,10 @@ public class UserController {
      */
     //Query String
     @GetMapping("/all") // (GET) 127.0.0.1:9000/users/all
-    public BaseResponse<List<GetUserRes>> getUsers(@RequestParam(required = false) String Email) {
+    public BaseResponse<List<GetUserRes>> getUsers() {
         // TODO : status check
         try {
-            if (Email == null) {
-                List<GetUserRes> getUsersRes = userProvider.getUsers();
-                return new BaseResponse<>(getUsersRes);
-            }
-            List<GetUserRes> getUsersRes = userProvider.getUsersByEmail(Email);
+            List<GetUserRes> getUsersRes = userProvider.getUsers();
             return new BaseResponse<>(getUsersRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -79,7 +77,6 @@ public class UserController {
      * @return BaseResponse<PostUserRes>
      */
     // Body
-    @Transactional
     @PostMapping("")  // (POST) 127.0.0.1:9000/users
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         if (postUserReq.getUserEmail() == null) {
@@ -107,7 +104,6 @@ public class UserController {
      *
      * @return BaseResponse<PostLoginRes>
      */
-    @Transactional
     @PostMapping("/login")  // (POST) 127.0.0.1:9000/users/login
     public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
         if (postLoginReq.getUserEmail() == null) {
@@ -159,7 +155,6 @@ public class UserController {
         }
     }
 
-    @Transactional
     @PatchMapping("/delete")
     public BaseResponse<String> delUser() {
         try {
@@ -232,7 +227,6 @@ public class UserController {
         }
     }
 
-    @Transactional
     @PatchMapping("/{addressId}/address")
     public BaseResponse<String> editAddress(@PathVariable("addressId") int addressId, @RequestBody PatchAddressReq patchAddressReq) {
         try {
@@ -246,7 +240,6 @@ public class UserController {
         }
     }
 
-    @Transactional
     @PatchMapping("/{addressId}/address/delete")
     public BaseResponse<String> delAddress(@PathVariable("addressId") int addressId) {
         try {

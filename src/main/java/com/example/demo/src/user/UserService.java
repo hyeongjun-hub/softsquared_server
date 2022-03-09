@@ -1,7 +1,6 @@
 package com.example.demo.src.user;
 
 
-
 import com.example.demo.config.BaseException;
 import com.example.demo.src.user.model.entity.User;
 import com.example.demo.src.user.model.request.*;
@@ -14,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -22,20 +22,18 @@ import static com.example.demo.config.BaseResponseStatus.*;
 public class UserService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final UserDao userDao;
-    private final UserProvider userProvider;
+    private final UserMapper userMapper;
     private final JwtService jwtService;
 
 
     @Autowired
-    public UserService(UserDao userDao, UserProvider userProvider, JwtService jwtService) {
-        this.userDao = userDao;
-        this.userProvider = userProvider;
+    public UserService(JwtService jwtService, UserMapper userMapper) {
         this.jwtService = jwtService;
-
+        this.userMapper = userMapper;
     }
 
     //POST
+    @Transactional
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
         //중복
         if(this.checkEmail(postUserReq.getUserEmail()) == 1){
@@ -50,7 +48,7 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            int userId = userDao.createUser(postUserReq);
+            int userId = userMapper.createUser(postUserReq);
             //jwt 발급.
             String jwt = jwtService.createJwt(userId);
             return new PostUserRes(userId, jwt);
@@ -59,14 +57,15 @@ public class UserService {
         }
     }
 
+    @Transactional
     public PatchUserRes editUser(int userId, User user) throws BaseException {
+        //status 값 확인
+        if (!userMapper.getUserStatus(userId).equals("Y")) {
+            throw new BaseException(USERS_STATUS_NOT_Y);
+        }
         //중복
         if(this.checkEmail(user.getUserEmail()) == 1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
-        }
-        //status 값 확인
-        if (!user.getStatus().equals("Y")) {
-            throw new BaseException(USERS_STATUS_NOT_Y);
         }
         String pwd;
         try{
@@ -77,7 +76,7 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            int result = userDao.editUser(userId, user);
+            int result = userMapper.editUser(userId, user);
             if(result == 0){
                 throw new BaseException(EDIT_FAIL_CONTENT);
             }
@@ -91,7 +90,7 @@ public class UserService {
 
     public void delUser(PostUserDelReq postUserDelReq) throws BaseException {
         try{
-            userDao.delUser(postUserDelReq);
+            userMapper.delUser(postUserDelReq);
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
@@ -100,7 +99,7 @@ public class UserService {
 
     public int checkEmail(String email) throws BaseException{
         try{
-            return userDao.checkEmail(email);
+            return userMapper.checkEmail(email);
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
@@ -108,7 +107,7 @@ public class UserService {
 
     public int checkAddress(String address) throws BaseException {
         try {
-            return userDao.checkAddress(address);
+            return userMapper.checkAddress(address);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -116,14 +115,15 @@ public class UserService {
 
     public int checkAddressName(String addressName) throws BaseException {
         try {
-            return userDao.checkAddressName(addressName);
+            return userMapper.checkAddressName(addressName);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
+    @Transactional
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException{
-        User user = userDao.getLoginUser(postLoginReq);
+        User user = userMapper.getLoginUser(postLoginReq);
         //이메일 존재여부 확인
         if(this.checkEmail(postLoginReq.getUserEmail()) != 1){
             throw new BaseException(POST_USERS_NOT_EXISTS_EMAIL);
@@ -149,7 +149,7 @@ public class UserService {
         }
     }
 
-    // TODO : 주소이름 중복
+    @Transactional
     public int createAddress(int userId, PostAddressReq postAddressReq) throws BaseException {
         // 주소 중복 확인
         if(this.checkAddress(postAddressReq.getAddress()) == 1){
@@ -160,7 +160,7 @@ public class UserService {
             throw new BaseException(POST_ADDRESS_EXISTS_ADDRESS_NAME);
         }
         try{
-            return userDao.createAddress(userId, postAddressReq);
+            return userMapper.createAddress(userId, postAddressReq);
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
@@ -168,15 +168,16 @@ public class UserService {
 
     public int getUserId(int addressId) throws BaseException {
         try{
-            int userId = userDao.getUserId(addressId);
+            int userId = userMapper.getUserId(addressId);
             return userId;
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
+    @Transactional
     public void editAddress(int addressId, PatchAddressReq patchAddressReq) throws BaseException {
-        String addressStatus = userDao.getAddressStatus(addressId);
+        String addressStatus = userMapper.getAddressStatus(addressId);
         //address status 값 확인
         if (!addressStatus.equals("Y")) {
             throw new BaseException(POST_ADDRESS_STATUS_NOT_Y);
@@ -190,20 +191,21 @@ public class UserService {
             throw new BaseException(POST_ADDRESS_EXISTS_ADDRESS_NAME);
         }
         try{
-            userDao.editAddress(addressId, patchAddressReq);
+            userMapper.editAddress(addressId, patchAddressReq);
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
+    @Transactional
     public void delAddress(int addressId) throws BaseException {
-        String addressStatus = userDao.getAddressStatus(addressId);
+        String addressStatus = userMapper.getAddressStatus(addressId);
         //address status 값 확인
         if (!addressStatus.equals("Y")) {
             throw new BaseException(POST_ADDRESS_STATUS_NOT_Y);
         }
         try{
-            userDao.delAddress(addressId);
+            userMapper.delAddress(addressId);
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }

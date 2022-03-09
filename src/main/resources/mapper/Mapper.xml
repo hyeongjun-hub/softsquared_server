@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.src.user.UserMapper">
+
+    <insert id="createUser" parameterType="PostUserReq">
+        insert into User (userName, password, userEmail) VALUES (#{userName}, #{password}, #{userEmail})
+        <selectKey keyProperty="userId" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <select id="getUsers" resultType="GetUserRes">
+        select * from User
+    </select>
+
+    <select id="getUser" parameterType="int" resultType="GetUserRes">
+        select * from User where userId = #{userId} and status = 'Y'
+    </select>
+
+
+    <select id="checkEmail" parameterType="string" resultType="int">
+        select exists(select userEmail from User where userEmail = #{email})
+    </select>
+
+    <select id="checkAddress" parameterType="string" resultType="int">
+        select exists(select address from Address where address = #{address})
+    </select>
+
+    <select id="checkAddressName" parameterType="string" resultType="int">
+        select exists(select addressName from Address where addressName = #{addressName})
+    </select>
+
+    <update id="editUser" parameterType="Object">
+        UPDATE User SET userName = #{param2.userName}, userEmail = #{param2.userEmail} , password = #{param2.password}, profileImageUrl = #{param2.profileImageUrl}, phoneNumber=#{param2.phoneNumber}, mailAccept =#{param2.mailAccept}, smsAccept=#{param2.smsAccept} WHERE userId = #{param1}
+    </update>
+
+    <update id="delUser" parameterType="PostUserDelReq">
+        update User set status = 'D' where userId = #{userId}
+    </update>
+
+    <select id="getLoginUser" parameterType="PostLoginReq" resultType="User">
+        select * from User where userEmail = #{userEmail}
+    </select>
+
+    <select id="getUserId" parameterType="int" resultType="int">
+        select userId from Address where addressId = #{addressId}
+    </select>
+
+    <select id="getPoint" parameterType="int" resultType="int">
+        select point from User where userId = #{userId}
+    </select>
+
+    <select id="getCoupons" parameterType="int" resultType="GetCouponRes">
+        select Coupon.couponId couponId, amount, priceMin, startDate, Coupon.deadline deadLine, orderMethod, Coupon.status status from Coupon inner join RestaurantCoupon RC on Coupon.restaurantCouponId = RC.restaurantCouponId inner join User U on Coupon.userId = U.userId where U.userId = #{userId} and Coupon.status = 'Y'
+    </select>
+
+    <select id="getPresents" parameterType="int" resultType="GetPresentRes">
+        select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = #{userId} and Present.status='Y'
+    </select>
+
+    <select id="getAddress" parameterType="int" resultType="GetAddressRes">
+        select Address.addressId, addressName, address, Address.status from Address inner join User U on Address.userId = U.userId where U.userId = #{userId} and Address.status = 'Y'
+    </select>
+
+    <insert id="createAddress" parameterType="Object">
+        INSERT INTO Address (addressName, address, userId) VALUES (#{param2.addressName}, #{param2.address}, #{param1})
+        <selectKey keyProperty="addressId" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="editAddress" parameterType="Object">
+        Update Address SET addressName = #{param2.addressName}, address = #{param2.address} WHERE addressId = #{param1}
+    </update>
+
+    <update id="delAddress" parameterType="int">
+        Update Address SET status = 'D' WHERE addressId = #{addressId}
+    </update>
+
+    <select id="getAddressStatus" parameterType="int" resultType="string">
+        SELECT status FROM Address WHERE addressId = #{addressId}
+    </select>
+
+    <select id="getUserStatus" parameterType="int" resultType="string">
+        SELECT status FROM User WHERE userId = #{userId}
+    </select>
+
+</mapper>

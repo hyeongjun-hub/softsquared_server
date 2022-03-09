@@ -2,11 +2,7 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.user.model.entity.User;
-import com.example.demo.src.user.model.request.PostLoginReq;
 import com.example.demo.src.user.model.response.*;
-import com.example.demo.utils.JwtService;
-import com.example.demo.utils.SHA256;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,48 +12,33 @@ import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
-//Provider : Read의 비즈니스 로직 처리
 @Service
 public class UserProvider {
 
-    private final UserDao userDao;
-    private final JwtService jwtService;
+    private final UserMapper userMapper;
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public UserProvider(UserDao userDao, JwtService jwtService) {
-        this.userDao = userDao;
-        this.jwtService = jwtService;
+    public UserProvider(UserMapper userMapper) {
+        this.userMapper = userMapper;
     }
 
     public List<GetUserRes> getUsers() throws BaseException{
         try{
-            List<GetUserRes> getUserRes = userDao.getUsers();
-            return getUserRes;
+            return userMapper.getUsers();
         }
         catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public List<GetUserRes> getUsersByEmail(String email) throws BaseException{
-        try{
-            List<GetUserRes> getUsersRes = userDao.getUsersByEmail(email);
-            return getUsersRes;
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-
     public GetUserRes getUser(int userId) throws BaseException {
-        if (!userDao.getUserStatus(userId).equals('Y')) {
+        if (!userMapper.getUserStatus(userId).equals("Y")) {
             throw new BaseException(USERS_STATUS_NOT_Y);
         }
         try {
-            GetUserRes getUserRes = userDao.getUser(userId);
-            return getUserRes;
+            return userMapper.getUser(userId);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -65,7 +46,7 @@ public class UserProvider {
 
     public int getPoint(int userId) throws BaseException {
         try{
-            int point = userDao.getPoint(userId);
+            int point = userMapper.getPoint(userId);
             return point;
         } catch (Exception ignored) {
             throw new BaseException(PASSWORD_DECRYPTION_ERROR);
@@ -74,7 +55,7 @@ public class UserProvider {
 
     public List<GetCouponRes> getCoupons(int userId) throws BaseException{
         try{
-            List<GetCouponRes> getCouponRes = userDao.getCoupons(userId);
+            List<GetCouponRes> getCouponRes = userMapper.getCoupons(userId);
             return getCouponRes;
         }
         catch (Exception exception) {
@@ -84,7 +65,7 @@ public class UserProvider {
 
     public List<GetPresentRes> getPresents(int userId) throws BaseException{
         try{
-            List<GetPresentRes> getPresentRes = userDao.getPresents(userId);
+            List<GetPresentRes> getPresentRes = userMapper.getPresents(userId);
             return getPresentRes;
         }
         catch (Exception exception) {
@@ -94,7 +75,7 @@ public class UserProvider {
 
     public List<GetAddressRes> getAddress(int userId) throws BaseException{
         try{
-            List<GetAddressRes> getAddressRes = userDao.getAddress(userId);
+            List<GetAddressRes> getAddressRes = userMapper.getAddress(userId);
             return getAddressRes;
         }
         catch (Exception exception) {

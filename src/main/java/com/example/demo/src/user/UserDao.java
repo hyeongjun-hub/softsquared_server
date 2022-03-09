@@ -115,10 +115,10 @@ public class UserDao {
         }
     }
 
-    public int checkAddressName(String address){
+    public int checkAddressName(String addressName){
         try{
             String checkAddressNameQuery = "select exists(select addressName from Address where addressName = ?)";
-            String checkAddressNameParams = address;
+            String checkAddressNameParams = addressName;
             return this.jdbcTemplate.queryForObject(checkAddressNameQuery,
                     int.class,
                     checkAddressNameParams);
@@ -126,7 +126,6 @@ public class UserDao {
             return 0;
         }
     }
-
 
     public int modifyUserName(PatchUserReq patchUserReq){
         String modifyUserNameQuery = "update User set userName = ? where userId = ? ";
@@ -137,7 +136,7 @@ public class UserDao {
 
     public int editUser(int userId, User user){
         String editUserQuery = "UPDATE User SET userName = ?, userEmail = ? , password = ?, profileImageUrl=?, phoneNumber=?, mailAccept =?, smsAccept=? WHERE userId = ?";
-        Object[] editUserParams = new Object[]{user.getUserName(), user.getUserEmail(), user.getPassword(), user.getProfileImageUrl(), user.getPhoneNumber(), user.getMailAccept(), user.getSmsAccept() ,userId};
+        Object[] editUserParams = new Object[]{user.getUserName(), user.getUserEmail(), user.getPassword(), user.getProfileImageUrl(), user.getPhoneNumber(), user.getMailAccept(), user.getSmsAccept(), userId};
         return this.jdbcTemplate.update(editUserQuery, editUserParams);
     }
 
