@@ -15,19 +15,22 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 public class OrderService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private OrderDao orderDao;
+    private OrderMapper orderMapper;
 
     @Transactional
-    public int createOrder(PostOrderReq postOrderReq) throws BaseException {
+    public int createOrder(int userId, PostOrderReq postOrderReq) throws BaseException {
         try{
-            int orderListId = orderDao.createOrder(postOrderReq);
+            int orderListId = orderMapper.createOrder(postOrderReq);
             // userCart의 status를 N으로 변경
-            orderDao.updateCartStatus(postOrderReq.getUserCartId());
+            orderMapper.updateCartStatus(postOrderReq.getUserCartId());
             // coupon의 status를 N으로 변경
-            orderDao.updateCouponStatus(postOrderReq.getCouponId());
+            orderMapper.updateCouponStatus(postOrderReq.getCouponId());
             // present의 status를 N으로 변경
-            orderDao.updatePresentStatus(postOrderReq.getPresentId());
-            orderDao.updatePrice(orderListId);
+            orderMapper.updatePresentStatus(postOrderReq.getPresentId());
+            // User의 point를 차감
+            orderMapper.updatePoint(userId, postOrderReq.getUsePoint());
+            int finalPrice = orderMapper.calculateFinalPrice(orderListId);
+            orderMapper.updatePrice(orderListId, finalPrice);
             return orderListId;
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);

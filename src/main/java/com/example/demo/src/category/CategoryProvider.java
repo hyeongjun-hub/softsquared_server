@@ -14,13 +14,13 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 @Service
 @AllArgsConstructor
 public class CategoryProvider {
-    private final CategoryDao categoryDao;
+    private final CategoryMapper categoryMapper;
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public List<GetCategoryRes> getCategories() throws BaseException{
         try{
-            List<GetCategoryRes> getCategoriesRes = categoryDao.getCategories();
+            List<GetCategoryRes> getCategoriesRes = categoryMapper.getCategories();
             return getCategoriesRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -29,7 +29,7 @@ public class CategoryProvider {
 
     public List<GetCategoryRes> getCategoriesByServiceId(int serviceId) throws BaseException{
         try{
-            List<GetCategoryRes> getCategoriesRes = categoryDao.getCategoriesByServiceId(serviceId);
+            List<GetCategoryRes> getCategoriesRes = categoryMapper.getCategoriesByServiceId(serviceId);
             return getCategoriesRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

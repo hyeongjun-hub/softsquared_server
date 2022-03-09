@@ -18,11 +18,11 @@ import static com.example.demo.config.BaseResponseStatus.POST_CARTS_INVALID_MENU
 public class CartService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final CartDao cartDao;
+    private final CartDao cartMapper;
 
     public PostCartRes createCart(int userId) throws BaseException {
         try{
-            int userCartId = cartDao.createUserCart(userId);
+            int userCartId = cartMapper.createCart(userId);
             return new PostCartRes(userCartId);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -34,9 +34,9 @@ public class CartService {
             throw new BaseException(POST_CARTS_INVALID_MENU);
         }
         try{
-            int orderDetailId = cartDao.addMenu(userCartId, postAddCartReq);
+            int orderDetailId = cartMapper.addMenu(userCartId, postAddCartReq);
             System.out.println("orderDetailId = " + orderDetailId);
-            cartDao.updateCart(orderDetailId, userCartId);
+            cartMapper.updateCart(userCartId, cartMapper.calculatePrice(orderDetailId));
             PostAddCartRes postAddCartRes = new PostAddCartRes(orderDetailId);
             return postAddCartRes;
         } catch (Exception exception) {
@@ -46,9 +46,9 @@ public class CartService {
 
     public PostAddCartRes addAdditionalMenu(int userCartId, PostAddAdditionalCartReq postAddAdditionalCartReq) throws BaseException {
         try{
-            int orderDetailId = cartDao.addAdditionalMenu(userCartId, postAddAdditionalCartReq);
+            int orderDetailId = cartMapper.addAdditionalMenu(userCartId, postAddAdditionalCartReq);
             PostAddCartRes postAddCartRes = new PostAddCartRes(orderDetailId);
-            cartDao.updateCartAdditional(orderDetailId, userCartId);
+            cartMapper.updateCartAdditional(userCartId, cartMapper.calculateAdditionalPrice(orderDetailId));
             return postAddCartRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -57,7 +57,7 @@ public class CartService {
 
     public void delCart(int userCartId) throws BaseException {
         try{
-            cartDao.delCart(userCartId);
+            cartMapper.delCart(userCartId);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

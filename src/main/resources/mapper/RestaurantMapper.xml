@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.src.restaurant.RestaurantMapper">
+    <select id="getRestaurants" parameterType="int" resultType="GetRestaurantRes">
+        select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, deliveryMinMoney, deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = #{categoryId} and Restaurant.status='Y' group by Restaurant.restaurantId
+    </select>
+
+    <select id="getRestaurantDetail" parameterType="int" resultType="GetRestaurantDetailRes">
+        select Restaurant.restaurantId, restaurantName, url, clean, deliveryMinMoney, paymentMethod,deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, takeOutMinMoney, orderMethod, cookingTimeStart, cookingTimeEnd, restaurantAddress, paymentMethodTO, M.menuDetail, bigMenuName, menuName, popular, menuSummary, menuImageUrl, price from Restaurant inner join BigMenu BM on Restaurant.restaurantId = BM.restaurantId inner join Menu M on BM.bigMenuId = M.bigMenuId left join RestaurantProfileImage RPI on Restaurant.restaurantId = RPI.restaurantId where Restaurant.restaurantId = #{restaurantId} and Restaurant.status = 'Y'
+    </select>
+</mapper>

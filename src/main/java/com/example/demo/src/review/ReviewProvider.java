@@ -13,11 +13,11 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 @AllArgsConstructor
 public class ReviewProvider {
 
-    private final ReviewDao reviewDao;
+    private final ReviewMapper reviewMapper;
 
     public List<GetReviewRes> getMyReviews(int userId) throws BaseException {
         try{
-            List<GetReviewRes> getReviewRes = reviewDao.getMyReviews(userId);
+            List<GetReviewRes> getReviewRes = reviewMapper.getMyReviews(userId);
             return getReviewRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

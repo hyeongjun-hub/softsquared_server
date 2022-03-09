@@ -16,13 +16,13 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 @AllArgsConstructor
 public class RestaurantProvider {
 
-    private final RestaurantDao restaurantDao;
+    private final RestaurantMapper restaurantMapper;
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public List<GetRestaurantRes> getRestaurants(int categoryId) throws BaseException {
         try{
-            List<GetRestaurantRes> getRestaurantRes = restaurantDao.getRestaurants(categoryId);
+            List<GetRestaurantRes> getRestaurantRes = restaurantMapper.getRestaurants(categoryId);
             return getRestaurantRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -31,7 +31,7 @@ public class RestaurantProvider {
 
     public List<GetRestaurantDetailRes> getRestaurantDetail(int restaurantId) throws BaseException {
         try{
-            List<GetRestaurantDetailRes> getRestaurantDetailRes = restaurantDao.getRestaurantDetail(restaurantId);
+            List<GetRestaurantDetailRes> getRestaurantDetailRes = restaurantMapper.getRestaurantDetail(restaurantId);
             return getRestaurantDetailRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

@@ -17,11 +17,11 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 public class OrderProvider {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public final OrderDao orderDao;
+    public final OrderMapper orderMapper;
 
     public List<GetOrderRes> getOrders(int userId) throws BaseException {
         try{
-            List<GetOrderRes> getOrderRes = orderDao.getOrders(userId);
+            List<GetOrderRes> getOrderRes = orderMapper.getOrders(userId);
             return getOrderRes;
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
@@ -30,7 +30,7 @@ public class OrderProvider {
 
     public List<GetOrderDetailRes> getOrder(int orderListId) throws BaseException {
         try {
-            List<GetOrderDetailRes> getOrderDetailRes = orderDao.getOrder(orderListId);
+            List<GetOrderDetailRes> getOrderDetailRes = orderMapper.getOrder(orderListId);
             return getOrderDetailRes;
         }
         catch(Exception exception){

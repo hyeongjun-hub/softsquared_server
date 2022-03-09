@@ -24,7 +24,7 @@ public class CartDao {
     }
 
     //POST
-    public int createUserCart(int userId) {
+    public int createCart(int userId) {
         String createCartQuery = "insert into UserCart (userId) values (?)";
         int createCartParams = userId;
         this.jdbcTemplate.update(createCartQuery, createCartParams);
@@ -46,7 +46,8 @@ public class CartDao {
                         rs.getInt(5),
                         rs.getString(6),
                         rs.getInt(7),
-                        rs.getInt(8)
+                        rs.getInt(8),
+                        rs.getInt(9)
                 ), getCartParams
         );
     }
@@ -61,20 +62,25 @@ public class CartDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
     }
 
-    public void updateCart(int orderDetailId, int userCartId) {
-        String calculationQuery = "select M.price * OrderDetail.amount from OrderDetail left join Menu M on OrderDetail.menuId = M.menuId where OrderDetailId = ?";
-        int priceSum = this.jdbcTemplate.queryForObject(calculationQuery, int.class, orderDetailId);
+    public int calculatePrice(int orderDetailId){
+        String calculationQuery = "select M.price * OrderDetail.amount from OrderDetail left join Menu M on OrderDetail.menuId = M.menuId where orderDetailId = ?";
+        return this.jdbcTemplate.queryForObject(calculationQuery, int.class, orderDetailId);
+    }
+
+    public void updateCart(int userCartId, int priceSum) {
         String updateCartQuery = "Update UserCart set priceSum = priceSum + ? where userCartId = ?";
         Object[] updateCartParams = new Object[]{priceSum, userCartId};
         this.jdbcTemplate.update(updateCartQuery, updateCartParams);
     }
 
-    public void updateCartAdditional(int orderDetailId, int userCartId) {
-        String calculationQuery = "select AM.price * OrderDetail.amount from OrderDetail left join AdditionalMenu AM on OrderDetail.additionalMenuId = AM.additionalMenuId where OrderDetailId = ? and OrderDetailId.status = 'Y'";
-        int priceSum = this.jdbcTemplate.queryForObject(calculationQuery, int.class, orderDetailId);
-        System.out.println("priceSum = " + priceSum);
+    public int calculateAdditionalPrice(int orderDetailId){
+        String calculationAPQuery = "select AM.price * OrderDetail.amount from OrderDetail left join AdditionalMenu AM on OrderDetail.additionalMenuId = AM.additionalMenuId where orderDetailId = ? and OrderDetail.status = 'Y'";
+        return this.jdbcTemplate.queryForObject(calculationAPQuery, int.class, orderDetailId);
+    }
+
+    public void updateCartAdditional(int userCartId, int additionalPriceSum) {
         String updateCartQuery = "Update UserCart set priceSum = priceSum + ? where userCartId = ?";
-        Object[] updateCartParams = new Object[]{priceSum, userCartId};
+        Object[] updateCartParams = new Object[]{additionalPriceSum, userCartId};
         this.jdbcTemplate.update(updateCartQuery, updateCartParams);
     }
 

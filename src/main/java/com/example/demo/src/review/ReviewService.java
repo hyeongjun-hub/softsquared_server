@@ -13,11 +13,12 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 @AllArgsConstructor
 public class ReviewService {
 
-    private final ReviewDao reviewDao;
+    private final ReviewMapper reviewMapper;
 
     public PostReviewRes createReview(int orderListId, int restaurantId, PostReviewReq postReviewReq) throws BaseException {
         try{
-            return reviewDao.createReview(orderListId, restaurantId, postReviewReq);
+            int reviewId = reviewMapper.createReview(orderListId, restaurantId, postReviewReq);
+            return new PostReviewRes(reviewId, postReviewReq.getContent());
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -25,7 +26,8 @@ public class ReviewService {
 
     public PostReviewRes createOwnerReview(int reviewId, String content) throws BaseException {
         try {
-            return reviewDao.createOwnerReview(reviewId, content);
+            int ownerReviewId = reviewMapper.createOwnerReview(reviewId, content);
+            return new PostReviewRes(ownerReviewId, content);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -33,7 +35,7 @@ public class ReviewService {
 
     public void delReview(int reviewId) throws BaseException {
         try{
-            reviewDao.delReview(reviewId);
+            reviewMapper.delReview(reviewId);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -41,7 +43,7 @@ public class ReviewService {
 
     public void editReview(int reviewId, PatchReviewReq patchReviewReq) throws BaseException {
         try{
-            reviewDao.editReview(reviewId, patchReviewReq);
+            reviewMapper.editReview(reviewId, patchReviewReq);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

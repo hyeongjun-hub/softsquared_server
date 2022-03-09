@@ -16,4 +16,5 @@ public class GetCartRes {
     private String additionalMenuName;
     private int additionalMenuPrice;
     private int amount;
+    private int priceSum;
 }

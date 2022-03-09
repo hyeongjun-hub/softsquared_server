@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.src.category.CategoryMapper">
+    <select id="getCategories" resultType="GetCategoryRes">
+        select categoryId, categoryName, categoryImageUrl, serviceId from Category where status='Y'
+    </select>
+    
+    <select id="getCategoriesByServiceId" parameterType="int" resultType="GetCategoryRes">
+        select categoryId, categoryName, categoryImageUrl, serviceId from Category where serviceId = #{serviceId} and status='Y'
+    </select>
+</mapper>

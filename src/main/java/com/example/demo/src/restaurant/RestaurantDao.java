@@ -21,6 +21,7 @@ public class RestaurantDao {
 
     public List<GetRestaurantRes> getRestaurants(int categoryId) {
         String getRestaurantsQuery = "select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, restaurantName, deliveryStart, deliveryEnd, deliveryMinMoney, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = ? and Restaurant.status='Y' group by Restaurant.restaurantId";
+        System.out.println("getRestaurantsQuery = " + getRestaurantsQuery);
         int getRestaurantParams = categoryId;
         return this.jdbcTemplate.query(getRestaurantsQuery,
                 (rs, rowNum) -> new GetRestaurantRes(

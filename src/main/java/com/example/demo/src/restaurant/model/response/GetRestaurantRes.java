@@ -14,9 +14,9 @@ public class GetRestaurantRes {
     private int reviewCount;
     private Double reviewAvg;
     private String avatarUrl;
+    private int deliveryMinMoney;
     private int deliveryStart;
     private int deliveryEnd;
-    private int deliveryMinMoney;
     private int deliveryTipMin;
     private int deliveryTipMax;
     private String orderMethod;

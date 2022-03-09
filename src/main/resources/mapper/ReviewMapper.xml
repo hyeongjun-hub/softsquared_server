@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.src.review.ReviewMapper">
+    <select id="getMyReviews" parameterType="int" resultType="GetReviewRes">
+        select Review.reviewId, restaurantName, Review.content myReview, Review.imageUrl imageUrl, Review.star star, Review.isOwner isOwner, Review.updatedAt myUpdatedAt, PR.content ownerReview, PR.updatedAt ownerUpdatedAt from Review inner join OrderList OL on Review.orderListId = OL.orderListId inner join UserCart UC on OL.userCartID = UC.userCartId left join Restaurant R on Review.restaurantId = R.restaurantId left join Review PR on Review.reviewId = PR.postReviewId where userId = #{userId} and Review.status = 'Y'
+    </select>
+
+    <insert id="createReview" parameterType="Object">
+        INSERT INTO Review (content, isPrivate, imageUrl, star, orderListId, restaurantId) VALUES (#{param3.content}, #{param3.isPrivate}, #{param3.imageUrl}, #{param3.star}, #{param1}, #{param2})
+        <selectKey keyProperty="reviewId" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <insert id="createOwnerReview" parameterType="Object">
+        insert into Review (content, isOwner, postReviewId) values(#{param2}, 'Y', #{param1})
+        <selectKey keyProperty="ownerReviewId" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="delReview" parameterType="int">
+        Update Review set status = 'D' where reviewId = #{reviewId}
+    </update>
+
+    <update id="editReview" parameterType="Object">
+        UPDATE Review t SET t.content = #{param2.content}, t.isPrivate = #{param2.isPrivate}, t.imageUrl = #{param2.imageUrl}, t.star = #{param2.star} WHERE t.reviewId = #{param1}
+    </update>
+</mapper>

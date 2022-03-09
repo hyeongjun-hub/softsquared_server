@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.src.order.OrderMapper">
+    <insert id="createOrder" parameterType="PostOrderReq">
+        insert into OrderList (userCartId, request, toRider, usePoint, addressId, couponId, presentId, paymentMethodId) values (#{userCartId},#{request},#{toRider},#{userPoint},#{addressId},#{couponId},#{presentId},#{paymentMethodId})
+        <selectKey keyProperty="orderListId" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateCartStatus" parameterType="int">
+        update UserCart set status = 'N' where UserCartId = #{userCartId}
+    </update>
+
+    <update id="updateCouponStatus" parameterType="int">
+        update Coupon set status = 'N' where couponId = #{couponId}
+    </update>
+
+    <update id="updatePresentStatus" parameterType="int">
+        update Present set status = 'N' where presentId = #{presentId}
+    </update>
+
+    <update id="updatePoint" parameterType="Object">
+        update User set point = point - #{param2} where userId = #{param1}
+    </update>
+    
+    <select id="calculateFinalPrice" parameterType="int" resultType="int">
+        select GREATEST(Sum(priceSum) - IFNULL(amount,0) - IFNULL(price, 0), 0) as finalPrice from OrderList inner join UserCart UC on OrderList.userCartID = UC.userCartId left join Coupon C on OrderList.couponId = C.couponId left join RestaurantCoupon RC on C.restaurantCouponId = RC.restaurantCouponId left join Present P on OrderList.presentId = P.presentId where orderListId=#{orderListId}
+    </select>
+
+    <update id="updatePrice" parameterType="Object">
+        Update OrderList set finalPrice = #{param2} where orderListId = #{param1}
+    </update>
+
+    <select id="getOrders" parameterType="int" resultType="GetOrderRes">
+        select distinct OrderList.orderListId as orderListId, (IfNULL(M.price,0) + IFNULL(AM.price, 0)) as price, OD.amount, restaurantName, menuName, additionalMenuName, finalPrice, DATE_FORMAT(OrderList.createdAt, '%Y년 %m월 %d일 %p %l:%s')as createdAt, deliveryAddress, restaurantPhoneNumber, request, toRider, spoon, address, phoneNumber from OrderList inner join PaymentMethod PM on OrderList.paymentMethodId = PM.paymentMethodId inner join UserCart UC on OrderList.userCartID = UC.userCartId inner join OrderDetail OD on UC.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId inner join Address A on OrderList.addressId = A.addressId left join Restaurant R on BM.restaurantId = R.restaurantId inner join User U on UC.userId = U.userId where OrderListId = #{orderListId}
+    </select>
+
+    <select id="getOrder" parameterType="int" resultType="GetOrderDetailRes">
+        select distinct OrderList.orderListId as orderListId, (IfNULL(M.price,0) + IFNULL(AM.price, 0)) as price, OD.amount, restaurantName, menuName, additionalMenuName, finalPrice, DATE_FORMAT(OrderList.createdAt, '%Y년 %m월 %d일 %p %l:%s')as createdAt, deliveryAddress, restaurantPhoneNumber, request, toRider, spoon, address, phoneNumber from OrderList inner join PaymentMethod PM on OrderList.paymentMethodId = PM.paymentMethodId inner join UserCart UC on OrderList.userCartID = UC.userCartId inner join OrderDetail OD on UC.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId inner join Address A on OrderList.addressId = A.addressId left join Restaurant R on BM.restaurantId = R.restaurantId inner join User U on UC.userId = U.userId where OrderListId = #{orderListId}
+    </select>
+</mapper>

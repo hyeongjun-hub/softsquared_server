@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.src.menu.MenuMapper">
+    <select id="getMenu" parameterType="int" resultType="GetMenuRes">
+        select Menu.menuId as menuId, menuName, menuDetail, Menu.price as menuPrice, menuImageUrl, bigAdditionalMenuName, maxSelect, additionalMenuName, AM.price as additionalMenuPrice from Menu inner join BigAdditionalMenu BAM on Menu.menuId = BAM.menuId inner join AdditionalMenu AM on BAM.bigAdditionalMenuId = AM.bigAdditionalMenuId where Menu.menuId = #{menuId} and Menu.status = 'Y'
+    </select>
+</mapper>

@@ -39,7 +39,7 @@ public class ReviewDao {
                 , getMyReviewsParams);
     }
 
-    public PostReviewRes createReview(int orderListId, int restaurantId, PostReviewReq postReviewReq) {
+    public int createReview(int orderListId, int restaurantId, PostReviewReq postReviewReq) {
         String createReviewQuery = "INSERT INTO Review (content, isPrivate, imageUrl, star, orderListId, restaurantId) VALUES (?, ?, ?, ?, ?, ?)";
         Object[] createReviewParams = new Object[]{postReviewReq.getContent(), postReviewReq.getIsPrivate(), postReviewReq.getImageUrl(), postReviewReq.getStar(), orderListId, restaurantId};
         System.out.println("createReviewQuery = " + createReviewQuery);
@@ -47,19 +47,17 @@ public class ReviewDao {
 
         String lastInsertIdQuery = "select last_insert_id()";
         int reviewId = this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
-        String content = postReviewReq.getContent();
-        return new PostReviewRes(reviewId, content);
-
+        return reviewId;
     }
 
-    public PostReviewRes createOwnerReview(int reviewId, String content) {
+    public int createOwnerReview(int reviewId, String content) {
         String createOwnerReviewQuery = "insert into Review (content, isOwner, postReviewId) values(?, 'Y', ?)";
         Object[] creatOwnerReviewParams = new Object[]{content, reviewId};
         this.jdbcTemplate.update(createOwnerReviewQuery, creatOwnerReviewParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
         int ownerReviewId = this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
-        return new PostReviewRes(ownerReviewId, content);
+        return ownerReviewId;
     }
 
     public void delReview(int reviewId) {

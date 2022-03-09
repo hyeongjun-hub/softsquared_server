@@ -14,18 +14,18 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 @Service
 public class ServiceProvider {
 
-    private final ServiceDao serviceDao;
+    private final ServiceMapper serviceMapper;
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public ServiceProvider(ServiceDao serviceDao) {
-        this.serviceDao = serviceDao;
+    public ServiceProvider(ServiceMapper serviceMapper) {
+        this.serviceMapper = serviceMapper;
     }
 
     public List<GetServiceRes> getServices() throws BaseException {
         try{
-            List<GetServiceRes> getServiceRes = serviceDao.getServices();
+            List<GetServiceRes> getServiceRes = serviceMapper.getServices();
             return getServiceRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

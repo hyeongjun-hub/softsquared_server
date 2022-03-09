@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class OrderDao {
@@ -46,9 +47,18 @@ public class OrderDao {
         this.jdbcTemplate.update(updatePresentQuery, updatePresentParams);
     }
 
-    public void updatePrice(int orderListId) {
+    public void updatePoint(int userId, int point) {
+        String updatePointQuery = "update User set point = point - ? where userId = ?";
+        Object[] updatePointParams = new Object[]{point, userId};
+        this.jdbcTemplate.update(updatePointQuery, updatePointParams);
+    }
+
+    public int calculateFinalPrice(int orderListId){
         String calculateQuery = "select GREATEST(Sum(priceSum) - IFNULL(amount,0) - IFNULL(price, 0), 0) as finalPrice from OrderList inner join UserCart UC on OrderList.userCartID = UC.userCartId left join Coupon C on OrderList.couponId = C.couponId left join RestaurantCoupon RC on C.restaurantCouponId = RC.restaurantCouponId left join Present P on OrderList.presentId = P.presentId where orderListId=?";
-        int finalPrice = this.jdbcTemplate.queryForObject(calculateQuery, int.class, orderListId);
+        return this.jdbcTemplate.queryForObject(calculateQuery, int.class, orderListId);
+    }
+
+    public void updatePrice(int orderListId, int finalPrice) {
         String updatePriceQuery = "Update OrderList set finalPrice = ? where orderListId = ?";
         Object[] updatePriceParams = new Object[]{finalPrice, orderListId};
         this.jdbcTemplate.update(updatePriceQuery, updatePriceParams);

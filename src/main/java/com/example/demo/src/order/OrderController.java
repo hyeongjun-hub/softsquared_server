@@ -27,7 +27,8 @@ public class OrderController {
     @PostMapping("/new")
     public BaseResponse<Integer> createOrder(@RequestBody PostOrderReq postOrderReq) {
         try{
-            int resultInt = orderService.createOrder(postOrderReq);
+            int userId = jwtService.getUserId();
+            int resultInt = orderService.createOrder(userId, postOrderReq);
             return new BaseResponse<>(resultInt);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
