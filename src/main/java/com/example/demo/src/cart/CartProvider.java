@@ -16,12 +16,14 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 public class CartProvider {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final CartDao cartMapper;
+    private final CartMapper cartMapper;
 
     public List<GetCartRes> getCart(int userCartId) throws BaseException {
         try{
+            System.out.println("userCartId = " + userCartId);
             return cartMapper.getCart(userCartId);
         } catch (Exception exception) {
+            System.out.println("exception = " + exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

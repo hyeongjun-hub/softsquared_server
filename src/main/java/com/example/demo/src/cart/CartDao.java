@@ -3,8 +3,6 @@ package com.example.demo.src.cart;
 import com.example.demo.src.cart.model.response.GetCartRes;
 import com.example.demo.src.cart.model.request.PostAddAdditionalCartReq;
 import com.example.demo.src.cart.model.request.PostAddCartReq;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,7 +12,6 @@ import java.util.List;
 
 @Repository
 public class CartDao {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private JdbcTemplate jdbcTemplate;
 

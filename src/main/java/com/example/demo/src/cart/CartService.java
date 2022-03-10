@@ -18,13 +18,14 @@ import static com.example.demo.config.BaseResponseStatus.POST_CARTS_INVALID_MENU
 public class CartService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final CartDao cartMapper;
+    private final CartMapper cartMapper;
 
     public PostCartRes createCart(int userId) throws BaseException {
         try{
             int userCartId = cartMapper.createCart(userId);
             return new PostCartRes(userCartId);
         } catch (Exception exception) {
+            System.out.println("exception = " + exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }
@@ -51,6 +52,7 @@ public class CartService {
             cartMapper.updateCartAdditional(userCartId, cartMapper.calculateAdditionalPrice(orderDetailId));
             return postAddCartRes;
         } catch (Exception exception) {
+            System.out.println("exception = " + exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

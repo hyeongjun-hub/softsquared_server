@@ -3,9 +3,49 @@
 <mapper namespace="com.example.demo.src.cart.CartMapper">
     <insert id="createCart" parameterType="int">
         insert into UserCart (userId) values (#{userId})
-        <selectKey keyProperty="userCartId" resultType="int">
+        <selectKey resultType="int">
             select LAST_INSERT_ID()
         </selectKey>
     </insert>
+
+    <select id="getCart" parameterType="int" resultType="GetCartRes">
+        select UserCart.userCartId, restaurantName, menuImageUrl, menuName, M.price as menuPrice, additionalMenuName, AM.price as additionalMenuPrice, OD.amount, priceSum from UserCart inner join User U on UserCart.userId = U.userId inner join OrderDetail OD on UserCart.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId left Join Restaurant R on BM.restaurantId = R.restaurantId where UserCart.userCartId = #{userCartId} and UserCart.status = 'Y'
+    </select>
+
+    <insert id="addMenu" parameterType="Object">
+        insert into OrderDetail (userCartId, menuId, amount) values (#{param1}, #{param2.menuId}, #{param2.amount})
+        <selectKey keyProperty="orderDetailId" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <select id="calculatePrice" parameterType="int" resultType="int">
+        select IFNULL(M.price * OrderDetail.amount, 0) from OrderDetail left join Menu M on OrderDetail.menuId = M.menuId where orderDetailId = #{orderDetilId}
+    </select>
+
+    <update id="updateCart" parameterType="Object">
+        Update UserCart set priceSum = priceSum + #{param2} where userCartId = #{param1}
+    </update>
+
+    <select id="calculateAdditionalPrice" parameterType="int" resultType="int">
+        select IFNULL(AM.price * OrderDetail.amount, 0) from OrderDetail left join AdditionalMenu AM on OrderDetail.additionalMenuId = AM.additionalMenuId where orderDetailId = #{orderDetailId} and OrderDetail.status = 'Y'
+    </select>
+
+    <update id="updateCartAdditional" parameterType="Object">
+        Update UserCart set priceSum = priceSum + #{param2} where userCartId = #{param1}
+    </update>
+
+    <insert id="addAdditionalMenu" parameterType="Object">
+        insert into OrderDetail (userCartId, additionalMenuId, amount) values (#{param1}, #{param2.additionalMenuId}, #{param2.amount})
+        <selectKey keyProperty="orderDetailId" resultType="int">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <update id="delCart" parameterType="int">
+        Update UserCart set status = 'D' where userCartId = #{userCartId}
+    </update>
+
+
 
 </mapper>

@@ -42,25 +42,6 @@ public class UserDao {
                 );
     }
 
-    public List<GetUserRes> getUsersByEmail(String email){
-        String getUsersByEmailQuery = "select * from User where userEmail =?";
-        String getUsersByEmailParams = email;
-        return this.jdbcTemplate.query(getUsersByEmailQuery,
-                (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userId"),
-                        rs.getString("userName"),
-                        rs.getString("userEmail"),
-                        rs.getString("password"),
-                        rs.getString("profileImageUrl"),
-                        rs.getString("phoneNumber"),
-                        rs.getInt("point"),
-                        rs.getString("mailAccept"),
-                        rs.getString("smsAccept"),
-                        rs.getString("grade"),
-                        rs.getString("status")),
-                getUsersByEmailParams);
-    }
-
     public GetUserRes getUser(int userId){
         String getUserQuery = "select * from User where userId = ? and status = 'Y'";
         int getUserParams = userId;
