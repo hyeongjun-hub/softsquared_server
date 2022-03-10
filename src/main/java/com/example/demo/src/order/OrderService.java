@@ -1,6 +1,8 @@
 package com.example.demo.src.order;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponse;
+import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.order.model.request.PostOrderReq;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -17,7 +19,7 @@ public class OrderService {
 
     private OrderMapper orderMapper;
 
-    @Transactional
+    @Transactional(rollbackFor = {BaseException.class})
     public int createOrder(int userId, PostOrderReq postOrderReq) throws BaseException {
         try{
             orderMapper.createOrder(postOrderReq);

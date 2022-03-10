@@ -181,7 +181,7 @@ public class UserDao {
     }
 
     public List<GetPresentRes> getPresents(int userId) {
-        String getPresentsQuery = "select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = ? and Present.status='Y'";
+        String getPresentsQuery = "select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = ?";
         int getPresentsParams = userId;
         return this.jdbcTemplate.query(getPresentsQuery,
                 (rs, rowNum) -> new GetPresentRes(

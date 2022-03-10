@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 import static com.example.demo.config.BaseResponseStatus.POST_CARTS_INVALID_MENU;
@@ -21,6 +22,7 @@ public class CartService {
 
     private final CartMapper cartMapper;
 
+    @Transactional(rollbackFor = {BaseException.class})
     public PostCartRes createCart(int userId) throws BaseException {
         try{
             int userCartId = 0;

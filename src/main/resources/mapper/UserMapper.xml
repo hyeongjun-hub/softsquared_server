@@ -55,7 +55,7 @@
     </select>
 
     <select id="getPresents" parameterType="int" resultType="GetPresentRes">
-        select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = #{userId} and Present.status='Y'
+        select presentId, price, deadline, Present.status as status from Present inner join User U on Present.userId = U.userId where Present.userId = #{userId}
     </select>
 
     <select id="getAddress" parameterType="int" resultType="GetAddressRes">
