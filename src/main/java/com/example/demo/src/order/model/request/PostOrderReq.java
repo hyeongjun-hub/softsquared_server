@@ -16,4 +16,5 @@ public class PostOrderReq {
     private int couponId;
     private int presentId;
     private int paymentMethodId;
+    private int orderListId;
 }

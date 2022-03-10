@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostOwnerReviewReq {
     private String content;
+    private int ownerReviewId;
 }

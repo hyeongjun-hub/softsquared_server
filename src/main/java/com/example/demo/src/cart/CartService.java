@@ -3,6 +3,7 @@ package com.example.demo.src.cart;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.cart.model.request.PostAddAdditionalCartReq;
 import com.example.demo.src.cart.model.request.PostAddCartReq;
+import com.example.demo.src.cart.model.request.PostCreateCartReq;
 import com.example.demo.src.cart.model.response.PostAddCartRes;
 import com.example.demo.src.cart.model.response.PostCartRes;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,10 @@ public class CartService {
 
     public PostCartRes createCart(int userId) throws BaseException {
         try{
-            int userCartId = cartMapper.createCart(userId);
+            int userCartId = 0;
+            PostCreateCartReq postCreateCartReq = new PostCreateCartReq(userId, userCartId);
+            cartMapper.createCart(postCreateCartReq);
+            userCartId = postCreateCartReq.getUserCartId();
             return new PostCartRes(userCartId);
         } catch (Exception exception) {
             System.out.println("exception = " + exception);
@@ -35,7 +39,9 @@ public class CartService {
             throw new BaseException(POST_CARTS_INVALID_MENU);
         }
         try{
-            int orderDetailId = cartMapper.addMenu(userCartId, postAddCartReq);
+            postAddCartReq.setUserCartId(userCartId);
+            cartMapper.addMenu(postAddCartReq);
+            int orderDetailId = postAddCartReq.getOrderDetailId();
             System.out.println("orderDetailId = " + orderDetailId);
             cartMapper.updateCart(userCartId, cartMapper.calculatePrice(orderDetailId));
             PostAddCartRes postAddCartRes = new PostAddCartRes(orderDetailId);
@@ -47,7 +53,9 @@ public class CartService {
 
     public PostAddCartRes addAdditionalMenu(int userCartId, PostAddAdditionalCartReq postAddAdditionalCartReq) throws BaseException {
         try{
-            int orderDetailId = cartMapper.addAdditionalMenu(userCartId, postAddAdditionalCartReq);
+            postAddAdditionalCartReq.setUserCartId(userCartId);
+            cartMapper.addAdditionalMenu(postAddAdditionalCartReq);
+            int orderDetailId = postAddAdditionalCartReq.getOrderDetailId();
             PostAddCartRes postAddCartRes = new PostAddCartRes(orderDetailId);
             cartMapper.updateCartAdditional(userCartId, cartMapper.calculateAdditionalPrice(orderDetailId));
             return postAddCartRes;

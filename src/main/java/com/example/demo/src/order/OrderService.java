@@ -20,7 +20,9 @@ public class OrderService {
     @Transactional
     public int createOrder(int userId, PostOrderReq postOrderReq) throws BaseException {
         try{
-            int orderListId = orderMapper.createOrder(postOrderReq);
+            orderMapper.createOrder(postOrderReq);
+            int orderListId = postOrderReq.getOrderListId();
+            System.out.println("orderListId = " + orderListId);
             // userCart의 status를 N으로 변경
             orderMapper.updateCartStatus(postOrderReq.getUserCartId());
             // coupon의 status를 N으로 변경
@@ -33,6 +35,7 @@ public class OrderService {
             orderMapper.updatePrice(orderListId, finalPrice);
             return orderListId;
         } catch(Exception exception){
+            System.out.println("exception = " + exception);
             throw new BaseException(DATABASE_ERROR);
         }
     }

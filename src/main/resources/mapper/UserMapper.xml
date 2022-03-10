@@ -4,7 +4,7 @@
 
     <insert id="createUser" parameterType="PostUserReq">
         insert into User (userName, password, userEmail) VALUES (#{userName}, #{password}, #{userEmail})
-        <selectKey keyProperty="userId" resultType="int">
+        <selectKey keyProperty="userId" resultType="int" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
     </insert>

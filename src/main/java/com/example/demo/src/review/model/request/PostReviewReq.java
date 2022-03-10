@@ -14,4 +14,5 @@ public class PostReviewReq {
     private String isPrivate;
     private String imageUrl;
     private int star;
+    private int reviewId;
 }

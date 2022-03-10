@@ -2,6 +2,7 @@ package com.example.demo.src.review;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.review.model.request.PatchReviewReq;
+import com.example.demo.src.review.model.request.PostOwnerReviewReq;
 import com.example.demo.src.review.model.request.PostReviewReq;
 import com.example.demo.src.review.model.response.PostReviewRes;
 import lombok.AllArgsConstructor;
@@ -17,17 +18,19 @@ public class ReviewService {
 
     public PostReviewRes createReview(int orderListId, int restaurantId, PostReviewReq postReviewReq) throws BaseException {
         try{
-            int reviewId = reviewMapper.createReview(orderListId, restaurantId, postReviewReq);
+            reviewMapper.createReview(orderListId, restaurantId, postReviewReq);
+            int reviewId = postReviewReq.getReviewId();
             return new PostReviewRes(reviewId, postReviewReq.getContent());
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public PostReviewRes createOwnerReview(int reviewId, String content) throws BaseException {
+    public PostReviewRes createOwnerReview(int reviewId, PostOwnerReviewReq postOwnerReviewReq) throws BaseException {
         try {
-            int ownerReviewId = reviewMapper.createOwnerReview(reviewId, content);
-            return new PostReviewRes(ownerReviewId, content);
+            reviewMapper.createOwnerReview(reviewId, postOwnerReviewReq.getContent());
+            int ownerReviewId = postOwnerReviewReq.getOwnerReviewId();
+            return new PostReviewRes(ownerReviewId, postOwnerReviewReq.getContent());
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

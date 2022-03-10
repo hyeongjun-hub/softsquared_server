@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostAddCartReq {
-    private int menuId;
-    private int amount;
+public class PostCreateCartReq {
+    private int userId;
     private int userCartId;
-    private int orderDetailId;
 }

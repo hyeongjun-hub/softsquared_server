@@ -48,7 +48,8 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            int userId = userMapper.createUser(postUserReq);
+            userMapper.createUser(postUserReq);
+            int userId = postUserReq.getUserId();
             //jwt 발급.
             String jwt = jwtService.createJwt(userId);
             return new PostUserRes(userId, jwt);
@@ -160,7 +161,8 @@ public class UserService {
             throw new BaseException(POST_ADDRESS_EXISTS_ADDRESS_NAME);
         }
         try{
-            return userMapper.createAddress(userId, postAddressReq);
+            userMapper.createAddress(userId, postAddressReq);
+            return postAddressReq.getAddressId();
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }

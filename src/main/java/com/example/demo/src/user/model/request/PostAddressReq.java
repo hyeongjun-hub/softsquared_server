@@ -12,4 +12,5 @@ import lombok.Setter;
 public class PostAddressReq {
     private String addressName;
     private String address;
+    private int addressId;
 }

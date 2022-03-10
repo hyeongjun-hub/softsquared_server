@@ -7,14 +7,14 @@
 
     <insert id="createReview" parameterType="Object">
         INSERT INTO Review (content, isPrivate, imageUrl, star, orderListId, restaurantId) VALUES (#{param3.content}, #{param3.isPrivate}, #{param3.imageUrl}, #{param3.star}, #{param1}, #{param2})
-        <selectKey keyProperty="reviewId" resultType="int">
+        <selectKey keyProperty="reviewId" resultType="int" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
     </insert>
 
     <insert id="createOwnerReview" parameterType="Object">
         insert into Review (content, isOwner, postReviewId) values(#{param2}, 'Y', #{param1})
-        <selectKey keyProperty="ownerReviewId" resultType="int">
+        <selectKey keyProperty="ownerReviewId" resultType="int" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
     </insert>

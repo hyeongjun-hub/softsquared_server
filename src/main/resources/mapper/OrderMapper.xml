@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.src.order.OrderMapper">
     <insert id="createOrder" parameterType="PostOrderReq">
-        insert into OrderList (userCartId, request, toRider, usePoint, addressId, couponId, presentId, paymentMethodId) values (#{userCartId},#{request},#{toRider},#{userPoint},#{addressId},#{couponId},#{presentId},#{paymentMethodId})
-        <selectKey keyProperty="orderListId" resultType="int">
+        insert into OrderList (userCartId, request, toRider, usePoint, addressId, couponId, presentId, paymentMethodId) values (#{userCartId},#{request},#{toRider},#{usePoint},#{addressId},#{couponId},#{presentId},#{paymentMethodId})
+        <selectKey keyProperty="orderListId" resultType="int" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
     </insert>
@@ -25,7 +25,7 @@
     </update>
     
     <select id="calculateFinalPrice" parameterType="int" resultType="int">
-        select GREATEST(Sum(priceSum) - IFNULL(amount,0) - IFNULL(price, 0), 0) as finalPrice from OrderList inner join UserCart UC on OrderList.userCartID = UC.userCartId left join Coupon C on OrderList.couponId = C.couponId left join RestaurantCoupon RC on C.restaurantCouponId = RC.restaurantCouponId left join Present P on OrderList.presentId = P.presentId where orderListId=#{orderListId}
+        select IFNULL(GREATEST(Sum(priceSum) - IFNULL(amount,0) - IFNULL(price, 0), 0), 0) as finalPrice from OrderList inner join UserCart UC on OrderList.userCartID = UC.userCartId left join Coupon C on OrderList.couponId = C.couponId left join RestaurantCoupon RC on C.restaurantCouponId = RC.restaurantCouponId left join Present P on OrderList.presentId = P.presentId where orderListId=#{orderListId}
     </select>
 
     <update id="updatePrice" parameterType="Object">

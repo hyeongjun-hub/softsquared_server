@@ -12,4 +12,6 @@ import lombok.Setter;
 public class PostAddAdditionalCartReq {
     private int additionalMenuId;
     private int amount;
+    private int userCartId;
+    private int orderDetailId;
 }

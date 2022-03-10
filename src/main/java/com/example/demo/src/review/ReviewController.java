@@ -54,7 +54,7 @@ public class ReviewController {
             return new BaseResponse<>(POST_REVIEWS_EMPTY_CONTENT);
         }
         try{
-            PostReviewRes ownerReview = reviewService.createOwnerReview(reviewId, postOwnerReviewReq.getContent());
+            PostReviewRes ownerReview = reviewService.createOwnerReview(reviewId, postOwnerReviewReq);
             return new BaseResponse<>(ownerReview);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));

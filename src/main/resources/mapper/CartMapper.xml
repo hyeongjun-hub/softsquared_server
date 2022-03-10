@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.src.cart.CartMapper">
-    <insert id="createCart" parameterType="int">
+    <insert id="createCart" parameterType="PostCreateCartReq">
         insert into UserCart (userId) values (#{userId})
-        <selectKey resultType="int">
+        <selectKey keyProperty="userCartId" resultType="int" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
     </insert>
@@ -12,8 +12,8 @@
         select UserCart.userCartId, restaurantName, menuImageUrl, menuName, M.price as menuPrice, additionalMenuName, AM.price as additionalMenuPrice, OD.amount, priceSum from UserCart inner join User U on UserCart.userId = U.userId inner join OrderDetail OD on UserCart.userCartId = OD.userCartId left join Menu M on OD.menuId = M.menuId left join AdditionalMenu AM on OD.additionalMenuId = AM.additionalMenuId left join BigMenu BM on M.bigMenuId = BM.bigMenuId left Join Restaurant R on BM.restaurantId = R.restaurantId where UserCart.userCartId = #{userCartId} and UserCart.status = 'Y'
     </select>
 
-    <insert id="addMenu" parameterType="Object">
-        insert into OrderDetail (userCartId, menuId, amount) values (#{param1}, #{param2.menuId}, #{param2.amount})
+    <insert id="addMenu" parameterType="PostAddCartReq">
+        insert into OrderDetail (userCartId, menuId, amount) values (#{userCartId}, #{menuId}, #{amount})
         <selectKey keyProperty="orderDetailId" resultType="int">
             select LAST_INSERT_ID()
         </selectKey>
@@ -35,8 +35,8 @@
         Update UserCart set priceSum = priceSum + #{param2} where userCartId = #{param1}
     </update>
 
-    <insert id="addAdditionalMenu" parameterType="Object">
-        insert into OrderDetail (userCartId, additionalMenuId, amount) values (#{param1}, #{param2.additionalMenuId}, #{param2.amount})
+    <insert id="addAdditionalMenu" parameterType="PostAddAdditionalCartReq">
+        insert into OrderDetail (userCartId, additionalMenuId, amount) values (#{userCartId}, #{additionalMenuId}, #{amount})
         <selectKey keyProperty="orderDetailId" resultType="int">
             select last_insert_id()
         </selectKey>
