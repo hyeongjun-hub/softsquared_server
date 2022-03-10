@@ -7,6 +7,7 @@ import com.example.demo.src.review.model.request.PostReviewReq;
 import com.example.demo.src.review.model.response.PostReviewRes;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -16,6 +17,7 @@ public class ReviewService {
 
     private final ReviewMapper reviewMapper;
 
+    @Transactional(rollbackFor = {BaseException.class})
     public PostReviewRes createReview(int orderListId, int restaurantId, PostReviewReq postReviewReq) throws BaseException {
         try{
             reviewMapper.createReview(orderListId, restaurantId, postReviewReq);
@@ -26,6 +28,7 @@ public class ReviewService {
         }
     }
 
+    @Transactional(rollbackFor = {BaseException.class})
     public PostReviewRes createOwnerReview(int reviewId, PostOwnerReviewReq postOwnerReviewReq) throws BaseException {
         try {
             reviewMapper.createOwnerReview(reviewId, postOwnerReviewReq.getContent());
@@ -36,6 +39,7 @@ public class ReviewService {
         }
     }
 
+    @Transactional(rollbackFor = {BaseException.class})
     public void delReview(int reviewId) throws BaseException {
         try{
             reviewMapper.delReview(reviewId);

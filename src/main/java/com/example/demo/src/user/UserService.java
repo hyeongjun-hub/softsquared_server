@@ -33,7 +33,7 @@ public class UserService {
     }
 
     //POST
-    @Transactional
+    @Transactional(rollbackFor = {BaseException.class})
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
         //중복
         if(this.checkEmail(postUserReq.getUserEmail()) == 1){
@@ -58,7 +58,7 @@ public class UserService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = {BaseException.class})
     public PatchUserRes editUser(int userId, User user) throws BaseException {
         //status 값 확인
         if (!userMapper.getUserStatus(userId).equals("Y")) {
@@ -89,6 +89,7 @@ public class UserService {
         }
     }
 
+    @Transactional(rollbackFor = {BaseException.class})
     public void delUser(PostUserDelReq postUserDelReq) throws BaseException {
         try{
             userMapper.delUser(postUserDelReq);
@@ -122,7 +123,7 @@ public class UserService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = {BaseException.class})
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException{
         User user = userMapper.getLoginUser(postLoginReq);
         //이메일 존재여부 확인

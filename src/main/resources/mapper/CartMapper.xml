@@ -3,7 +3,7 @@
 <mapper namespace="com.example.demo.src.cart.CartMapper">
     <insert id="createCart" parameterType="PostCreateCartReq">
         insert into UserCart (userId) values (#{userId})
-        <selectKey keyProperty="userCartId" resultType="int" order="AFTER">
+        <selectKey keyProperty="userCart" resultType="int" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
     </insert>

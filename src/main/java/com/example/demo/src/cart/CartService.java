@@ -36,6 +36,7 @@ public class CartService {
         }
     }
 
+    @Transactional(rollbackFor = {BaseException.class})
     public PostAddCartRes addMenu(int userCartId, PostAddCartReq postAddCartReq) throws BaseException {
         if (postAddCartReq.getMenuId() == 0) {
             throw new BaseException(POST_CARTS_INVALID_MENU);
@@ -53,6 +54,7 @@ public class CartService {
         }
     }
 
+    @Transactional(rollbackFor = {BaseException.class})
     public PostAddCartRes addAdditionalMenu(int userCartId, PostAddAdditionalCartReq postAddAdditionalCartReq) throws BaseException {
         try{
             postAddAdditionalCartReq.setUserCartId(userCartId);
