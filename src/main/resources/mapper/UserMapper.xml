@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.src.user.UserMapper">
 
-    <insert id="createUser" parameterType="PostUserReq">
-        insert into User (userName, password, userEmail) VALUES (#{userName}, #{password}, #{userEmail})
+    <insert id="createUser" parameterType="Object">
+        insert into User (userName, password, userEmail, platform) VALUES (#{param1.userName}, #{param1.password}, #{param1.userEmail}, #{param2})
         <selectKey keyProperty="userId" resultType="int" order="AFTER">
             select LAST_INSERT_ID()
         </selectKey>
@@ -20,6 +20,10 @@
 
     <select id="checkEmail" parameterType="string" resultType="int">
         select exists(select userEmail from User where userEmail = #{email})
+    </select>
+
+    <select id="getPlatform" parameterType="string" resultType="string">
+        select platform from User where userEmail = #{email}
     </select>
 
     <select id="checkAddress" parameterType="string" resultType="int">
@@ -44,6 +48,10 @@
 
     <select id="getUserId" parameterType="int" resultType="int">
         select userId from Address where addressId = #{addressId}
+    </select>
+
+    <select id="getUserIdByEmail" parameterType="string" resultType="int">
+        select userId from User where userEmail = #{userEmail}
     </select>
 
     <select id="getPoint" parameterType="int" resultType="int">

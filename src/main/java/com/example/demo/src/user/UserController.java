@@ -1,20 +1,18 @@
 package com.example.demo.src.user;
 
+import com.example.demo.src.user.model.entity.KaKaoUser;
 import com.example.demo.src.user.model.entity.User;
 import com.example.demo.src.user.model.request.*;
 import com.example.demo.src.user.model.response.*;
+import com.example.demo.utils.KaKaoLoginService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.utils.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -125,8 +123,34 @@ public class UserController {
     }
 
     /**
+     * 카카오 로그인 API
+     * [GET] /users/oauth2/kakao
+     *
+     * @return BaseResponse<String>>
+     */
+
+    @ResponseBody
+    @PostMapping("/login/kakao")
+    public BaseResponse<PostLoginRes> kaKaoLogin(@RequestBody PostKaKaoLoginReq postKaKaoLogin) {
+        if (postKaKaoLogin.getAccessToken() == null || postKaKaoLogin.getAccessToken().isEmpty()) {
+            return new BaseResponse<>(AUTH_KAKAO_EMPTY_TOKEN);
+        }
+
+        try {
+            // 액세스 토큰으로 사용자 정보 받아온다.
+            KaKaoUser kaKaoUser = KaKaoLoginService.getKaKaoUser(postKaKaoLogin.getAccessToken());
+
+            // 로그인 처리 or 회원가입 진행 후 jwt, userIdx 반환
+            PostLoginRes postLoginRes = userService.kaKaoLogin(kaKaoUser);
+            return new BaseResponse<>(postLoginRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
      * 유저정보변경 API
-     * [PATCH] /users
+     * [PATCH] /users/detail
      *
      * @return BaseResponse<String>
      */
@@ -155,6 +179,13 @@ public class UserController {
         }
     }
 
+    /**
+     * 회원 삭제 API
+     * [PATCH] /users/delete
+     *
+     * @return BaseResponse<List < GetUserRes>>
+     */
+
     @PatchMapping("/delete")
     public BaseResponse<String> delUser() {
         try {
@@ -172,6 +203,13 @@ public class UserController {
         }
     }
 
+    /**
+     * 회원 포인트조회 API
+     * [GET] /users/point
+     *
+     * @return BaseResponse<Integer>
+     */
+
     @GetMapping("/point")
     public BaseResponse<Integer> getPoint() {
         try {
@@ -183,6 +221,13 @@ public class UserController {
         }
     }
 
+    /**
+     * 회원 쿠폰조회 API
+     * [GET] /users/coupon
+     *
+     * @return BaseResponse<List < GetCouponRes>>
+     */
+
     @GetMapping("/coupon")
     public BaseResponse<List<GetCouponRes>> getCoupons() {
         try {
@@ -193,6 +238,13 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * 회원 선물조회 API
+     * [GET] /users/present
+     *
+     * @return BaseResponse<List < GetPresentRes>>
+     */
 
     @GetMapping("/present")
     public BaseResponse<List<GetPresentRes>> getPresents() {
@@ -261,5 +313,7 @@ public class UserController {
 //            return new BaseResponse<>(exception.getStatus());
 //        }
 //    }
+
+
 
 }

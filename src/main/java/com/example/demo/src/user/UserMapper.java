@@ -20,9 +20,11 @@ public interface UserMapper {
 
     GetUserRes getUser(int userId);
 
-    int createUser(PostUserReq postUserReq);
+    int createUser(PostUserReq postUserReq, String platform);
 
     int checkEmail(String email);
+
+    String getPlatform(String email);
 
     int checkAddress(String address);
 
@@ -35,6 +37,8 @@ public interface UserMapper {
     User getLoginUser(PostLoginReq postLoginReq);
 
     int getUserId(int addressId);
+
+    int getUserIdByEmail(String userEmail);
 
     int getPoint(int userId);
 

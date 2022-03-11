@@ -2,6 +2,7 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.user.model.entity.KaKaoUser;
 import com.example.demo.src.user.model.entity.User;
 import com.example.demo.src.user.model.request.*;
 import com.example.demo.src.user.model.response.PatchUserRes;
@@ -48,7 +49,7 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            userMapper.createUser(postUserReq);
+            userMapper.createUser(postUserReq, "inApp");
             int userId = postUserReq.getUserId();
             //jwt 발급.
             String jwt = jwtService.createJwt(userId);
@@ -64,7 +65,7 @@ public class UserService {
         if (!userMapper.getUserStatus(userId).equals("Y")) {
             throw new BaseException(USERS_STATUS_NOT_Y);
         }
-        //중복
+        //이메일 중복확인
         if(this.checkEmail(user.getUserEmail()) == 1){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
@@ -149,6 +150,29 @@ public class UserService {
         else{
             throw new BaseException(FAILED_TO_LOGIN);
         }
+    }
+
+    // 수정 중
+    @Transactional(rollbackFor = {BaseException.class})
+    public PostLoginRes kaKaoLogin(KaKaoUser kaKaoUser) throws BaseException {
+        int userId;
+        String jwt;
+//        // 카카오에서 받아온 사용자 정보의 이메일을 가지고 User테이블에 있는지 확인한다.
+        if (userMapper.checkEmail(kaKaoUser.getEmail()) == 1) {
+//            // 해당 이메일이 카카오 가입으로 가입된 계정이 맞는지 확인한다.
+            if (userMapper.getPlatform(kaKaoUser.getEmail()).equals("KaKao")) {
+//                //카카오 가입 이메일이 맞다면 로그인 처리
+                userId = userMapper.getUserIdByEmail(kaKaoUser.getEmail());
+                jwt = jwtService.createJwt(userId);
+            } else {
+                throw new BaseException(USERS_INAPP_EXISTS); // 해당 이메일로 자체 이메일가입한 상태라면 카카오로그인, 가입 X, 자체로그인으로.
+            }
+        } else { // 가입이 되어 있지 않다면 가입 진행
+            PostUserReq kaKaoSignUp = new PostUserReq(kaKaoUser.getUserName(), kaKaoUser.getEmail(), "socialLogin", 0);
+            userId = userMapper.createUser(kaKaoSignUp, "KaKao"); // + KaKao
+            jwt = jwtService.createJwt(userId);
+        }
+        return new PostLoginRes(userId, jwt);
     }
 
     @Transactional

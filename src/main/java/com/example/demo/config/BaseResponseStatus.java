@@ -25,6 +25,7 @@ public enum BaseResponseStatus {
     // users
     USERS_EMPTY_USER_ID(false, 4010, "유저 이메일 값을 확인해주세요."),
     USERS_STATUS_NOT_Y(false,4011, "삭제된 유저입이니다."),
+    AUTH_KAKAO_EMPTY_TOKEN(false, 4012, "유효하지않은 카카오 토큰입니다,"),
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 4015, "이메일을 입력해주세요."),
@@ -54,7 +55,9 @@ public enum BaseResponseStatus {
     // [POST] /users
     DUPLICATED_EMAIL(false, 4513, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,4514,"없는 아이디거나 비밀번호가 틀렸습니다."),
-
+    USERS_INAPP_EXISTS(false, 4515, "어플로 가입한 정보가 있습니다."),
+    FAILED_TO_KAKAO_AUTH(false, 4519, "카카오 유저 정보 조회에 실패하였습니다."),
+    FAILED_TO_KAKAO_EMAIL(false, 4520, "카카오 정보에 등록된 이메일이 없습니다. 이메일을 추가 입력해주세요."),
 
 
     /**
