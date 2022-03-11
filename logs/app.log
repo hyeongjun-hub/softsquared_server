@@ -1,2 +1,36 @@
-23:36:27.147 WARN  [File:TestController.java] [Func:getAll] [Line:35] [Message:Warn Level 테스트]- Warn Level 테스트
-23:36:27.204 ERROR [File:TestController.java] [Func:getAll] [Line:38] [Message:ERROR Level 테스트]- ERROR Level 테스트
+20:47:10.782 WARN  [File:RestaurantController.java] [Func:getRestaurants] [Line:30] [Message:deliveryStart]- deliveryStart
+20:48:21.290 WARN  [File:RestaurantController.java] [Func:getRestaurants] [Line:30] [Message:deliveryStart]- deliveryStart
+20:49:32.748 WARN  [File:RestaurantController.java] [Func:getRestaurants] [Line:30] [Message:order by deliveryStart]- order by deliveryStart
+20:50:57.167 WARN  [File:RestaurantController.java] [Func:getRestaurants] [Line:30] [Message:order by deliveryStart]- order by deliveryStart
+20:50:57.412 WARN  [File:RestaurantProvider.java] [Func:getRestaurantsWithSort] [Line:39] [Message:
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+### The error may exist in file [/Users/hyeongjun/Home/softsquared/api-server-spring-boot-final 2/out/production/resources/mapper/RestaurantMapper.xml]
+### The error may involve com.example.demo.src.restaurant.RestaurantMapper.getRestaurantsWithSort-Inline
+### The error occurred while setting parameters
+### SQL: select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, deliveryMinMoney, deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = ? and Restaurant.status='Y' group by Restaurant.restaurantId ?
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1]- 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+### The error may exist in file [/Users/hyeongjun/Home/softsquared/api-server-spring-boot-final 2/out/production/resources/mapper/RestaurantMapper.xml]
+### The error may involve com.example.demo.src.restaurant.RestaurantMapper.getRestaurantsWithSort-Inline
+### The error occurred while setting parameters
+### SQL: select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, deliveryMinMoney, deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = ? and Restaurant.status='Y' group by Restaurant.restaurantId ?
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+20:50:57.412 WARN  [File:RestaurantProvider.java] [Func:getRestaurantsWithSort] [Line:40] [Message:org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+### The error may exist in file [/Users/hyeongjun/Home/softsquared/api-server-spring-boot-final 2/out/production/resources/mapper/RestaurantMapper.xml]
+### The error may involve com.example.demo.src.restaurant.RestaurantMapper.getRestaurantsWithSort-Inline
+### The error occurred while setting parameters
+### SQL: select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, deliveryMinMoney, deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = ? and Restaurant.status='Y' group by Restaurant.restaurantId ?
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1]- org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+### The error may exist in file [/Users/hyeongjun/Home/softsquared/api-server-spring-boot-final 2/out/production/resources/mapper/RestaurantMapper.xml]
+### The error may involve com.example.demo.src.restaurant.RestaurantMapper.getRestaurantsWithSort-Inline
+### The error occurred while setting parameters
+### SQL: select categoryId, Restaurant.restaurantId as restaurantId, Restaurant.restaurantName as restaurantName, Count(star) reviewCount, AVG(star) reviewAvg, avatarUrl, deliveryMinMoney, deliveryStart, deliveryEnd, deliveryTipMin, deliveryTipMax, orderMethod from Restaurant left join Review R on Restaurant.restaurantId = R.restaurantId where categoryId = ? and Restaurant.status='Y' group by Restaurant.restaurantId ?
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''order by deliveryStart'' at line 1
+20:54:44.843 WARN  [File:RestaurantController.java] [Func:getRestaurants] [Line:30] [Message:Restaurant.deliveryStart]- Restaurant.deliveryStart
+20:56:36.239 WARN  [File:RestaurantController.java] [Func:getRestaurants] [Line:30] [Message:deliveryStart]- deliveryStart

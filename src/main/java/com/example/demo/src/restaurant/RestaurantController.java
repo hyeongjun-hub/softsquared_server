@@ -20,14 +20,31 @@ public class RestaurantController {
     private final RestaurantProvider restaurantProvider;
 
     @GetMapping("/{categoryId}")
-    public BaseResponse<List<GetRestaurantRes>> getRestaurants(@PathVariable("categoryId") int categoryId) {
+    public BaseResponse<List<GetRestaurantRes>> getRestaurants(@PathVariable("categoryId") int categoryId, @RequestParam(value = "sortQuery", required = false) String sortQuery) {
         try {
-            List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants(categoryId);
+            if(sortQuery == null){
+                List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants(categoryId);
+                return new BaseResponse<>(getRestaurantRes);
+            }
+            System.out.println("sortQuery = " + sortQuery);
+            logger.warn(sortQuery);
+            List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurantsWithSort(categoryId, sortQuery);
             return new BaseResponse<>(getRestaurantRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+//    @GetMapping("/{categoryId}")
+//    public BaseResponse<List<GetRestaurantRes>> getRestaurants(@PathVariable("categoryId") int categoryId) {
+//        try {
+//            List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants(categoryId);
+//            return new BaseResponse<>(getRestaurantRes);
+//        } catch (BaseException exception) {
+//            return new BaseResponse<>((exception.getStatus()));
+//        }
+//    }
+//
 
     @GetMapping("/{restaurantId}/detail")
     public BaseResponse<List<GetRestaurantDetailRes>> getRestaurantDetail(@PathVariable("restaurantId") int restaurantId) {

@@ -29,6 +29,18 @@ public class RestaurantProvider {
         }
     }
 
+    public List<GetRestaurantRes> getRestaurantsWithSort(int categoryId, String sortQuery) throws BaseException {
+        try{
+            List<GetRestaurantRes> getRestaurantRes = restaurantMapper.getRestaurantsWithSort(categoryId, sortQuery);
+            System.out.println("sortQuery2 = " + sortQuery);
+            return getRestaurantRes;
+        } catch (Exception exception) {
+            System.out.println("exception = " + exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
     public List<GetRestaurantDetailRes> getRestaurantDetail(int restaurantId) throws BaseException {
         try{
             List<GetRestaurantDetailRes> getRestaurantDetailRes = restaurantMapper.getRestaurantDetail(restaurantId);

@@ -12,7 +12,8 @@ import java.util.List;
 public interface RestaurantMapper {
 
     List<GetRestaurantRes> getRestaurants(int categoryId);
-
+    List<GetRestaurantRes> getRestaurantsWithSort(int categoryId, String sortQuery);
     List<GetRestaurantDetailRes> getRestaurantDetail(int restaurantId);
+
 
 }
