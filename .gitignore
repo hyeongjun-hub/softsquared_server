@@ -9,6 +9,7 @@
 # custom
 src/main/resources/application.yml
 nohup.out
+apikeys.txt
 
 # Default ignored files
 ## /.idea/workspace.xml
