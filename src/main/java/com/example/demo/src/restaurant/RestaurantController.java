@@ -19,40 +19,36 @@ public class RestaurantController {
 
     private final RestaurantProvider restaurantProvider;
 
+    /**
+     * 카테고리 식당 조회 API
+     * 카데고리 별 식당 조회와 정렬이 가능
+     *
+     * @param categoryId
+     * @param sortQuery
+     * @return BaseResponse<List < GetRestaurantRes>>
+     */
     @GetMapping("/{categoryId}")
-    public BaseResponse<List<GetRestaurantRes>> getRestaurants(@PathVariable("categoryId") int categoryId, @RequestParam(value = "sortQuery", required = false) String sortQuery) {
-        try {
-            if(sortQuery == null){
-                List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants(categoryId);
-                return new BaseResponse<>(getRestaurantRes);
-            }
-            System.out.println("sortQuery = " + sortQuery);
-            logger.warn(sortQuery);
-            List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurantsWithSort(categoryId, sortQuery);
+    public BaseResponse<List<GetRestaurantRes>> getRestaurants(@PathVariable("categoryId") int categoryId, @RequestParam(value = "sortQuery", required = false) String sortQuery) throws BaseException {
+        if (sortQuery == null) {
+            List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants(categoryId);
             return new BaseResponse<>(getRestaurantRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
         }
+        System.out.println("sortQuery = " + sortQuery);
+        logger.warn(sortQuery);
+        List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurantsWithSort(categoryId, sortQuery);
+        return new BaseResponse<>(getRestaurantRes);
     }
 
-//    @GetMapping("/{categoryId}")
-//    public BaseResponse<List<GetRestaurantRes>> getRestaurants(@PathVariable("categoryId") int categoryId) {
-//        try {
-//            List<GetRestaurantRes> getRestaurantRes = restaurantProvider.getRestaurants(categoryId);
-//            return new BaseResponse<>(getRestaurantRes);
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
-//
-
+    /**
+     * 식당 조회 API (메뉴탭)
+     * 메뉴탭에 해당하는 내용들을 조회하는 API
+     *
+     * @param restaurantId
+     * @return BaseResponse<List < GetRestaurantDetailRes>>
+     */
     @GetMapping("/{restaurantId}/detail")
-    public BaseResponse<List<GetRestaurantDetailRes>> getRestaurantDetail(@PathVariable("restaurantId") int restaurantId) {
-        try {
-            List<GetRestaurantDetailRes> getRestaurantDetailRes = restaurantProvider.getRestaurantDetail(restaurantId);
-            return new BaseResponse<>(getRestaurantDetailRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetRestaurantDetailRes>> getRestaurantDetail(@PathVariable("restaurantId") int restaurantId) throws BaseException {
+        List<GetRestaurantDetailRes> getRestaurantDetailRes = restaurantProvider.getRestaurantDetail(restaurantId);
+        return new BaseResponse<>(getRestaurantDetailRes);
     }
 }

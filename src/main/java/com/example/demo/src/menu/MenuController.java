@@ -21,16 +21,17 @@ public class MenuController {
 
     private final MenuProvider menuProvider;
 
+    /**
+     * 특정 메뉴 조회 API
+     *
+     * @param menuId
+     * @return BaseResponse<List < GetMenuRes>>
+     */
     @GetMapping("/{menuId}")
-    public BaseResponse<List<GetMenuRes>> getMenu(@PathVariable("menuId") int menuId) {
-        try{
-            List<GetMenuRes> getMenuRes = menuProvider.getMenu(menuId);
-            return new BaseResponse<>(getMenuRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetMenuRes>> getMenu(@PathVariable("menuId") int menuId) throws BaseException {
+        List<GetMenuRes> getMenuRes = menuProvider.getMenu(menuId);
+        return new BaseResponse<>(getMenuRes);
     }
-
 
 
 }

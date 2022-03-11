@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.utils.JwtService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,53 +32,35 @@ public class UserController {
     private final JwtService jwtService;
 
     /**
-     * 회원 조회 API
-     * [GET] /users
+     * 전체 유저 조회 API
      * 회원 번호 및 이메일 검색 조회 API
-     * [GET] /users? Email=
-     *
      * @return BaseResponse<List < GetUserRes>>
      */
-    //Query String
     @GetMapping("/all") // (GET) 127.0.0.1:9000/users/all
-    public BaseResponse<List<GetUserRes>> getUsers() {
-        // TODO : status check
-        try {
-            List<GetUserRes> getUsersRes = userProvider.getUsers();
-            return new BaseResponse<>(getUsersRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetUserRes>> getUsers() throws BaseException {
+        List<GetUserRes> getUsersRes = userProvider.getUsers();
+        return new BaseResponse<>(getUsersRes);
     }
 
     /**
-     * 회원 1명 조회 API
-     * [GET] /users/:userId
-     *
+     * 유저 조회 API
      * @return BaseResponse<GetUserRes>
      */
     @GetMapping("") // (GET) 127.0.0.1:9000/users
-    public BaseResponse<GetUserRes> getUser() {
-        // Get User
-        try {
-            int userId = jwtService.getUserId();
-            GetUserRes getUserRes = userProvider.getUser(userId);
-            return new BaseResponse<>(getUserRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<GetUserRes> getUser() throws BaseException {
+        int userId = jwtService.getUserId();
+        GetUserRes getUserRes = userProvider.getUser(userId);
+        return new BaseResponse<>(getUserRes);
 
     }
 
     /**
      * 회원가입 API
-     * [POST] /users
-     *
      * @return BaseResponse<PostUserRes>
      */
     // Body
     @PostMapping("")  // (POST) 127.0.0.1:9000/users
-    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
+    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) throws BaseException {
         if (postUserReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
@@ -88,22 +72,16 @@ public class UserController {
         if (postUserReq.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
-        try {
-            PostUserRes postUserRes = userService.createUser(postUserReq);
-            return new BaseResponse<>(postUserRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
+        PostUserRes postUserRes = userService.createUser(postUserReq);
+        return new BaseResponse<>(postUserRes);
     }
 
     /**
      * 로그인 API
-     * [POST] /users/logIn
-     *
      * @return BaseResponse<PostLoginRes>
      */
     @PostMapping("/login")  // (POST) 127.0.0.1:9000/users/login
-    public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
+    public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) throws BaseException {
         if (postLoginReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
@@ -114,50 +92,36 @@ public class UserController {
         if (postLoginReq.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
-        try {
-            PostLoginRes postLoginRes = userService.login(postLoginReq);
-            return new BaseResponse<>(postLoginRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+        PostLoginRes postLoginRes = userService.login(postLoginReq);
+        return new BaseResponse<>(postLoginRes);
+
     }
 
     /**
      * 카카오 로그인 API
-     * [GET] /users/oauth2/kakao
-     *
      * @return BaseResponse<String>>
      */
-
     @ResponseBody
     @PostMapping("/login/kakao")
-    public BaseResponse<PostLoginRes> kaKaoLogin(@RequestBody PostKaKaoLoginReq postKaKaoLogin) {
+    public BaseResponse<PostLoginRes> kaKaoLogin(@RequestBody PostKaKaoLoginReq postKaKaoLogin) throws BaseException {
         if (postKaKaoLogin.getAccessToken() == null || postKaKaoLogin.getAccessToken().isEmpty()) {
             return new BaseResponse<>(AUTH_KAKAO_EMPTY_TOKEN);
         }
-
-        try {
-            // 액세스 토큰으로 사용자 정보 받아온다.
-            KaKaoUser kaKaoUser = KaKaoLoginService.getKaKaoUser(postKaKaoLogin.getAccessToken());
-
-            // 로그인 처리 or 회원가입 진행 후 jwt, userIdx 반환
-            PostLoginRes postLoginRes = userService.kaKaoLogin(kaKaoUser);
-            return new BaseResponse<>(postLoginRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+        // 액세스 토큰으로 사용자 정보 받아온다.
+        KaKaoUser kaKaoUser = KaKaoLoginService.getKaKaoUser(postKaKaoLogin.getAccessToken());
+        // 로그인 처리 or 회원가입 진행 후 jwt, userIdx 반환
+        PostLoginRes postLoginRes = userService.kaKaoLogin(kaKaoUser);
+        return new BaseResponse<>(postLoginRes);
     }
 
     /**
      * 유저정보변경 API
      * [PATCH] /users/detail
-     *
      * @return BaseResponse<String>
      */
-
     @ResponseBody
     @PatchMapping("/detail")  // (GET) 127.0.0.1:9000/users/detail
-    public BaseResponse<PatchUserRes> editUser(@RequestBody User user) {
+    public BaseResponse<PatchUserRes> editUser(@RequestBody User user) throws BaseException {
         if (user.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
@@ -169,140 +133,113 @@ public class UserController {
         if (user.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
-        try {
-            //jwt에서 id 추출.
-            int userId = jwtService.getUserId();
-            PatchUserRes patchUserRes = userService.editUser(userId, user);
-            return new BaseResponse<>(patchUserRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
+        //jwt에서 id 추출.
+        int userId = jwtService.getUserId();
+        PatchUserRes patchUserRes = userService.editUser(userId, user);
+        return new BaseResponse<>(patchUserRes);
     }
 
     /**
      * 회원 삭제 API
-     * [PATCH] /users/delete
-     *
      * @return BaseResponse<List < GetUserRes>>
      */
-
     @PatchMapping("/delete")
-    public BaseResponse<String> delUser() {
-        try {
-            //jwt에서 idx 추출.
-            int userId = jwtService.getUserId();
+    public BaseResponse<String> delUser() throws BaseException {
+        //jwt에서 idx 추출.
+        int userId = jwtService.getUserId();
 
-            // 상태값 D로 변경
-            PostUserDelReq postUserDelReq = new PostUserDelReq(userId);
-            userService.delUser(postUserDelReq);
+        // 상태값 D로 변경
+        PostUserDelReq postUserDelReq = new PostUserDelReq(userId);
+        userService.delUser(postUserDelReq);
 
-            String result = "";
-            return new BaseResponse<>(result);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+        String result = "";
+        return new BaseResponse<>(result);
     }
 
     /**
      * 회원 포인트조회 API
-     * [GET] /users/point
-     *
      * @return BaseResponse<Integer>
      */
-
     @GetMapping("/point")
-    public BaseResponse<Integer> getPoint() {
-        try {
-            int userId = jwtService.getUserId();
-            int point = userProvider.getPoint(userId);
-            return new BaseResponse<>(point);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    public BaseResponse<Integer> getPoint() throws BaseException {
+        int userId = jwtService.getUserId();
+        int point = userProvider.getPoint(userId);
+        return new BaseResponse<>(point);
     }
 
     /**
      * 회원 쿠폰조회 API
-     * [GET] /users/coupon
-     *
      * @return BaseResponse<List < GetCouponRes>>
      */
-
     @GetMapping("/coupon")
-    public BaseResponse<List<GetCouponRes>> getCoupons() {
-        try {
-            int userId = jwtService.getUserId();
-            List<GetCouponRes> getCouponRes  = userProvider.getCoupons(userId);
-            return new BaseResponse<>(getCouponRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    public BaseResponse<List<GetCouponRes>> getCoupons() throws BaseException {
+        int userId = jwtService.getUserId();
+        List<GetCouponRes> getCouponRes = userProvider.getCoupons(userId);
+        return new BaseResponse<>(getCouponRes);
     }
 
     /**
      * 회원 선물조회 API
-     * [GET] /users/present
-     *
      * @return BaseResponse<List < GetPresentRes>>
      */
-
     @GetMapping("/present")
-    public BaseResponse<List<GetPresentRes>> getPresents() {
-        try {
-            int userId = jwtService.getUserId();
-            List<GetPresentRes> getPresentRes  = userProvider.getPresents(userId);
-            return new BaseResponse<>(getPresentRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    public BaseResponse<List<GetPresentRes>> getPresents() throws BaseException {
+        int userId = jwtService.getUserId();
+        List<GetPresentRes> getPresentRes = userProvider.getPresents(userId);
+        return new BaseResponse<>(getPresentRes);
     }
 
+    /**
+     * 회원 주소 조회 API
+     *
+     * @return BaseResponse<List<GetAddressRes>>
+     */
     @GetMapping("/address")
-    public BaseResponse<List<GetAddressRes>> getAddress() {
-        try {
-            int userId = jwtService.getUserId();
-            List<GetAddressRes> getAddressRes  = userProvider.getAddress(userId);
-            return new BaseResponse<>(getAddressRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    public BaseResponse<List<GetAddressRes>> getAddress() throws BaseException {
+        int userId = jwtService.getUserId();
+        List<GetAddressRes> getAddressRes = userProvider.getAddress(userId);
+        return new BaseResponse<>(getAddressRes);
     }
 
+    /**
+     * 회원 주소 생성 API
+     * @param postAddressReq
+     * @return BaseResponse<Integer>
+     */
     @PostMapping("/address")
-    public BaseResponse<Integer> createAddress( @RequestBody PostAddressReq postAddressReq) {
-        try {
-            int userId = jwtService.getUserId();
-            int addressId = userService.createAddress(userId, postAddressReq);
-            return new BaseResponse<>(addressId);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    public BaseResponse<Integer> createAddress(@RequestBody PostAddressReq postAddressReq) throws BaseException {
+        int userId = jwtService.getUserId();
+        int addressId = userService.createAddress(userId, postAddressReq);
+        return new BaseResponse<>(addressId);
     }
 
+    /**
+     * 회원 주소 수정 API
+     * @param addressId
+     * @param patchAddressReq
+     * @return BaseResponse<String>
+     */
     @PatchMapping("/{addressId}/address")
-    public BaseResponse<String> editAddress(@PathVariable("addressId") int addressId, @RequestBody PatchAddressReq patchAddressReq) {
-        try {
-            if (jwtService.getUserId() != userService.getUserId(addressId)) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
-            userService.editAddress(addressId, patchAddressReq);
-            return new BaseResponse<>("");
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
+    public BaseResponse<String> editAddress(@PathVariable("addressId") int addressId, @RequestBody PatchAddressReq patchAddressReq) throws BaseException {
+        if (jwtService.getUserId() != userService.getUserId(addressId)) {
+            return new BaseResponse<>(INVALID_USER_JWT);
         }
+        userService.editAddress(addressId, patchAddressReq);
+        return new BaseResponse<>("");
     }
 
+    /**
+     * 회원 주소 삭제 API
+     * @param addressId
+     * @return BaseResponse<String>
+     */
     @PatchMapping("/{addressId}/address/delete")
-    public BaseResponse<String> delAddress(@PathVariable("addressId") int addressId) {
-        try {
-            if (jwtService.getUserId() != userService.getUserId(addressId)) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
-            userService.delAddress(addressId);
-            return new BaseResponse<>("");
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
+    public BaseResponse<String> delAddress(@PathVariable("addressId") int addressId) throws BaseException {
+        if (jwtService.getUserId() != userService.getUserId(addressId)) {
+            return new BaseResponse<>(INVALID_USER_JWT);
         }
+        userService.delAddress(addressId);
+        return new BaseResponse<>("");
     }
 
 //    @PostMapping("/logout")
@@ -313,7 +250,4 @@ public class UserController {
 //            return new BaseResponse<>(exception.getStatus());
 //        }
 //    }
-
-
-
 }

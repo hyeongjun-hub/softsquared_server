@@ -22,27 +22,29 @@ public class CategoryController {
         this.categoryProvider = categoryProvider;
     }
 
+    /**
+     * 전체 카테고리 조회 API
+     *
+     * @return BaseResponse<List < GetCategoryRes>>
+     */
     @GetMapping("") // (GET) /categories
-    public BaseResponse<List<GetCategoryRes>> getCategories(){
-        try{
-            List<GetCategoryRes> getCategoriesRes;
-            getCategoriesRes = categoryProvider.getCategories();
-            return new BaseResponse<>(getCategoriesRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetCategoryRes>> getCategories() throws BaseException {
+        List<GetCategoryRes> getCategoriesRes;
+        getCategoriesRes = categoryProvider.getCategories();
+        return new BaseResponse<>(getCategoriesRes);
     }
 
+    /**
+     * 서비스와 카테고리 조회 API
+     *
+     * @param serviceId
+     * @return BaseResponse<List < GetCategoryRes>>
+     */
     @GetMapping("{serviceId}") // (GET) /categories/:serviceId
-    public BaseResponse<List<GetCategoryRes>> getCategoriesByServiceId(@PathVariable int serviceId){
-        try{
-            List<GetCategoryRes> getCategoriesRes = categoryProvider.getCategoriesByServiceId(serviceId);
-            return new BaseResponse<>(getCategoriesRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetCategoryRes>> getCategoriesByServiceId(@PathVariable int serviceId) throws BaseException {
+        List<GetCategoryRes> getCategoriesRes = categoryProvider.getCategoriesByServiceId(serviceId);
+        return new BaseResponse<>(getCategoriesRes);
     }
-
 
 
 }

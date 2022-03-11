@@ -25,58 +25,67 @@ public class CartController {
     private final CartService cartService;
     private final JwtService jwtService;
 
+    /**
+     * 장바구니 생성 API
+     *
+     * @return BaseResponse<PostCartRes>
+     */
     @PostMapping("/new")
-    public BaseResponse<PostCartRes> createCart() {
-        try{
-            int userId = jwtService.getUserId();
-            PostCartRes postCartRes = cartService.createCart(userId);
-            return new BaseResponse<>(postCartRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<PostCartRes> createCart() throws BaseException {
+        int userId = jwtService.getUserId();
+        PostCartRes postCartRes = cartService.createCart(userId);
+        return new BaseResponse<>(postCartRes);
     }
 
+    /**
+     * 장바구니 조회 API
+     *
+     * @param userCartId
+     * @return BaseResponse<List < GetCartRes>>
+     */
     @GetMapping("/{userCartId}")
-    public BaseResponse<List<GetCartRes>> getUserCart(@PathVariable int userCartId){
-        try{
-            List<GetCartRes> getCartRes = cartProvider.getCart(userCartId);
-            return new BaseResponse<>(getCartRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetCartRes>> getUserCart(@PathVariable int userCartId) throws BaseException {
+        List<GetCartRes> getCartRes = cartProvider.getCart(userCartId);
+        return new BaseResponse<>(getCartRes);
     }
 
-    //POST (menu를 추가)
+    /**
+     * 장바구니 메뉴담기 API
+     *
+     * @param userCartId
+     * @param postAddCartReq
+     * @return BaseResponse<PostAddCartRes>
+     */
     @PostMapping("{userCartId}/menu")
-    public BaseResponse<PostAddCartRes> addMenu(@PathVariable int userCartId, @RequestBody PostAddCartReq postAddCartReq) {
-        try{
-            PostAddCartRes postAddCartRes = cartService.addMenu(userCartId, postAddCartReq);
-            return new BaseResponse<>(postAddCartRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
-    //POST (additionalMenu를 추가)
-    @PostMapping("{userCartId}/additional-menu")
-    public BaseResponse<PostAddCartRes> addAdditionalMenu(@PathVariable int userCartId, @RequestBody PostAddAdditionalCartReq postAddAdditionalCartReq) {
-        try{
-            PostAddCartRes postAddCartRes = cartService.addAdditionalMenu(userCartId, postAddAdditionalCartReq);
-            return new BaseResponse<>(postAddCartRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<PostAddCartRes> addMenu(@PathVariable int userCartId, @RequestBody PostAddCartReq postAddCartReq) throws BaseException {
+        PostAddCartRes postAddCartRes = cartService.addMenu(userCartId, postAddCartReq);
+        return new BaseResponse<>(postAddCartRes);
     }
 
-    //Post (장바구니 삭제)
+    /**
+     * 장바구니 추가메뉴담기 API
+     *
+     * @param userCartId
+     * @param postAddAdditionalCartReq
+     * @return BaseResponse<PostAddCartRes>
+     */
+    @PostMapping("{userCartId}/additional-menu")
+    public BaseResponse<PostAddCartRes> addAdditionalMenu(@PathVariable int userCartId, @RequestBody PostAddAdditionalCartReq postAddAdditionalCartReq) throws BaseException {
+        PostAddCartRes postAddCartRes = cartService.addAdditionalMenu(userCartId, postAddAdditionalCartReq);
+        return new BaseResponse<>(postAddCartRes);
+    }
+
+    /**
+     * 장바구니 삭제 API
+     *
+     * @param userCartId
+     * @return BaseResponse<String>
+     */
     @PatchMapping("{userCartId}/delete")
-    public BaseResponse<String> delCart(@PathVariable int userCartId) {
-        try{
-            cartService.delCart(userCartId);
-            String result = "";
-            return new BaseResponse<>(result);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
+    public BaseResponse<String> delCart(@PathVariable int userCartId) throws BaseException {
+        cartService.delCart(userCartId);
+        String result = "";
+        return new BaseResponse<>(result);
     }
 
 }

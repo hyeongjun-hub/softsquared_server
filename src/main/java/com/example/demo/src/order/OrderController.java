@@ -24,36 +24,41 @@ public class OrderController {
     private final OrderService orderService;
     private final JwtService jwtService;
 
+    /**
+     * 주문하기 API
+     *
+     * @param postOrderReq
+     * @return BaseResponse<Integer>
+     */
     @PostMapping("/new")
-    public BaseResponse<Integer> createOrder(@RequestBody PostOrderReq postOrderReq) {
-        try{
-            int userId = jwtService.getUserId();
-            int resultInt = orderService.createOrder(userId, postOrderReq);
-            return new BaseResponse<>(resultInt);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<Integer> createOrder(@RequestBody PostOrderReq postOrderReq) throws BaseException {
+        int userId = jwtService.getUserId();
+        int resultInt = orderService.createOrder(userId, postOrderReq);
+        return new BaseResponse<>(resultInt);
     }
 
+    /**
+     * 주문내역 조회 API
+     *
+     * @return BaseResponse<List < GetOrderRes>>
+     */
     @GetMapping("/list")
-    public BaseResponse<List<GetOrderRes>> getOrders() {
-        try{
-            int userId = jwtService.getUserId();
-            List<GetOrderRes> getOrderRes = orderProvider.getOrders(userId);
-            return new BaseResponse<>(getOrderRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetOrderRes>> getOrders() throws BaseException {
+        int userId = jwtService.getUserId();
+        List<GetOrderRes> getOrderRes = orderProvider.getOrders(userId);
+        return new BaseResponse<>(getOrderRes);
     }
 
+    /**
+     * 상세 주문내역 조회 API
+     *
+     * @param orderListId
+     * @return BaseResponse<List < GetOrderDetailRes>>
+     */
     @GetMapping("/{orderListId}/detail")
-    public BaseResponse<List<GetOrderDetailRes>> getOrder(@PathVariable("orderListId") int orderListId) {
-        try{
-            List<GetOrderDetailRes> getOrderDetailRes = orderProvider.getOrder(orderListId);
-            return new BaseResponse<>(getOrderDetailRes);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetOrderDetailRes>> getOrder(@PathVariable("orderListId") int orderListId) throws BaseException {
+        List<GetOrderDetailRes> getOrderDetailRes = orderProvider.getOrder(orderListId);
+        return new BaseResponse<>(getOrderDetailRes);
     }
 
 }
