@@ -93,4 +93,8 @@
         SELECT status FROM User WHERE userId = #{userId}
     </select>
 
+    <update id="logout" parameterType="int">
+        UPDATE User SET isLogin = 'N' WHERE userId = #{userId}
+    </update>
+
 </mapper>

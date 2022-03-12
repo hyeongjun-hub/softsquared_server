@@ -58,4 +58,6 @@ public interface UserMapper {
 
     String getUserStatus(int userId);
 
+    void logout(int userId);
+
 }

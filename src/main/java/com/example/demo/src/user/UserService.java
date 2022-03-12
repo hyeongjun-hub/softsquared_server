@@ -175,7 +175,7 @@ public class UserService {
         return new PostLoginRes(userId, jwt);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = {BaseException.class})
     public int createAddress(int userId, PostAddressReq postAddressReq) throws BaseException {
         // 주소 중복 확인
         if(this.checkAddress(postAddressReq.getAddress()) == 1){
@@ -202,7 +202,7 @@ public class UserService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = {BaseException.class})
     public void editAddress(int addressId, PatchAddressReq patchAddressReq) throws BaseException {
         String addressStatus = userMapper.getAddressStatus(addressId);
         //address status 값 확인
@@ -224,7 +224,7 @@ public class UserService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = {BaseException.class})
     public void delAddress(int addressId) throws BaseException {
         String addressStatus = userMapper.getAddressStatus(addressId);
         //address status 값 확인
@@ -233,6 +233,14 @@ public class UserService {
         }
         try{
             userMapper.delAddress(addressId);
+        } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void logoutUser(int userId) throws BaseException {
+        try{
+            userMapper.logout(userId);
         } catch(Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }

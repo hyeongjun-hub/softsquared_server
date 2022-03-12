@@ -1,5 +1,6 @@
 package com.example.demo.src.user;
 
+import com.example.demo.config.Constant;
 import com.example.demo.src.user.model.entity.KaKaoUser;
 import com.example.demo.src.user.model.entity.User;
 import com.example.demo.src.user.model.request.*;
@@ -11,11 +12,15 @@ import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.utils.JwtService;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -30,6 +35,7 @@ public class UserController {
     private final UserProvider userProvider;
     private final UserService userService;
     private final JwtService jwtService;
+//    private final RedisTemplate<String, String> redisTemplate;
 
     /**
      * 전체 유저 조회 API
@@ -242,12 +248,20 @@ public class UserController {
         return new BaseResponse<>("");
     }
 
-//    @PostMapping("/logout")
-//    public BaseResponse<> logout(){
-//        try{
-//
-//        } catch (BaseException exception) {
-//            return new BaseResponse<>(exception.getStatus());
+    @PostMapping("/logout-user")
+    public BaseResponse<String> logoutUser() throws BaseException {
+        int userId = jwtService.getUserId();
+        userService.logoutUser(userId);
+//        String token = jwtService.getJwt();
+//        if(jwtService.isTokenValid(token)){
+//            Date expirationDate = jwtService.getExpirationDate(token);
+//            redisTemplate.opsForValue().set(
+//                    Constant.REDIS_PREFIX + token, "l",
+//                    expirationDate.getTime() - System.currentTimeMillis(),
+//                    TimeUnit.MILLISECONDS
+//            );
+//            logger.info("redis value : " + redisTemplate.opsForValue().get(Constant.REDIS_PREFIX + token));
 //        }
-//    }
+        return new BaseResponse<>("");
+    }
 }
