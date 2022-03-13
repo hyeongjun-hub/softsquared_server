@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.POST_CARTS_INVALID_MENU;
+
 @RestController
 @RequestMapping("/carts")
 @AllArgsConstructor
@@ -58,6 +60,9 @@ public class CartController {
      */
     @PostMapping("{userCartId}/menu")
     public BaseResponse<PostAddCartRes> addMenu(@PathVariable int userCartId, @RequestBody PostAddCartReq postAddCartReq) throws BaseException {
+        if(postAddCartReq.getMenuId() == 0){
+            return new BaseResponse<>(POST_CARTS_INVALID_MENU);
+        }
         PostAddCartRes postAddCartRes = cartService.addMenu(userCartId, postAddCartReq);
         return new BaseResponse<>(postAddCartRes);
     }
@@ -71,6 +76,9 @@ public class CartController {
      */
     @PostMapping("{userCartId}/additional-menu")
     public BaseResponse<PostAddCartRes> addAdditionalMenu(@PathVariable int userCartId, @RequestBody PostAddAdditionalCartReq postAddAdditionalCartReq) throws BaseException {
+        if(postAddAdditionalCartReq.getAdditionalMenuId() == 0){
+            return new BaseResponse<>(POST_CARTS_INVALID_MENU);
+        }
         PostAddCartRes postAddCartRes = cartService.addAdditionalMenu(userCartId, postAddAdditionalCartReq);
         return new BaseResponse<>(postAddCartRes);
     }
