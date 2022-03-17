@@ -2,6 +2,9 @@ package com.example.demo.src.user.model.entity;
 
 import lombok.*;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
@@ -9,11 +12,11 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class User {
     private int userId;
+    @NotBlank(message = "이름을 입력하세요.")
     private String userName;
-
-    @Pattern(regexp="^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")
+    @NotBlank(message = "이메일을 입력하세요.")
+    @Email(message = "이메일 형식을 확인해주세요.")
     private String userEmail;
-
     private String password;
     private String profileImageUrl;
     private String phoneNumber;
