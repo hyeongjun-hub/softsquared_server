@@ -71,10 +71,6 @@ public class UserController {
         if (postUserReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
-//        //이메일 정규표현
-//        if (!isRegexEmail(postUserReq.getUserEmail())) {
-//            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-//        }
         // 비밀번호 최소길이
         if (postUserReq.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
@@ -92,9 +88,6 @@ public class UserController {
         if (postLoginReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
-//        if (!isRegexEmail(postLoginReq.getUserEmail())) {
-//            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-//        }
         // 비밀번호 최소 길이
         if (postLoginReq.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
@@ -128,17 +121,6 @@ public class UserController {
     @ResponseBody
     @PatchMapping("/detail")  // (GET) 127.0.0.1:9000/users/detail
     public BaseResponse<PostUserRes> editUser(@Valid @RequestBody User user) throws BaseException {
-        if (user.getUserEmail() == null) {
-            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
-        }
-        // 이메일 형식
-//        if (!isRegexEmail(user.getUserEmail())) {
-//            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-//        }
-        // 비밀번호 최소길이
-        if (user.getPassword().length() < 8) {
-            return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
-        }
         //jwt에서 id 추출.
         int userId = jwtService.getUserId();
         PostUserRes patchUserRes = userService.editUser(userId, user);

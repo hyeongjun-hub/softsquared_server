@@ -15,4 +15,8 @@ public class ValidationErrorResponse {
     public void setIsSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
     }
+
+    public boolean getIsSuccess() {
+        return isSuccess;
+    }
 }
