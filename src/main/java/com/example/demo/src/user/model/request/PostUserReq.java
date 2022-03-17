@@ -5,12 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostUserReq {
     private String userName;
+    @Email(message = "이메일 형식을 확인해주세요")
     private String userEmail;
     private String password;
     private int userId;

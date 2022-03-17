@@ -60,7 +60,7 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = {BaseException.class})
-    public PatchUserRes editUser(int userId, User user) throws BaseException {
+    public PostUserRes editUser(int userId, User user) throws BaseException {
         //status 값 확인
         if (!userMapper.getUserStatus(userId).equals("Y")) {
             throw new BaseException(USERS_STATUS_NOT_Y);
@@ -84,7 +84,7 @@ public class UserService {
             }
             //jwt 발급.
             String jwt = jwtService.createJwt(userId);
-            return new PatchUserRes(userId, jwt);
+            return new PostUserRes(userId, jwt);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -125,7 +125,7 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = {BaseException.class})
-    public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException{
+    public PostUserRes login(PostLoginReq postLoginReq) throws BaseException{
         User user = userMapper.getLoginUser(postLoginReq);
         //이메일 존재여부 확인
         if(this.checkEmail(postLoginReq.getUserEmail()) != 1){
@@ -145,7 +145,7 @@ public class UserService {
         if(user.getPassword().equals(encryptPwd)){
             int userId = user.getUserId();
             String jwt = jwtService.createJwt(userId);
-            return new PostLoginRes(userId,jwt);
+            return new PostUserRes(userId,jwt);
         }
         else{
             throw new BaseException(FAILED_TO_LOGIN);

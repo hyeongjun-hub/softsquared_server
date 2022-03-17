@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -66,14 +67,14 @@ public class UserController {
      */
     // Body
     @PostMapping("")  // (POST) 127.0.0.1:9000/users
-    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) throws BaseException {
+    public BaseResponse<PostUserRes> createUser(@Valid @RequestBody PostUserReq postUserReq) throws BaseException {
         if (postUserReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
-        //이메일 정규표현
-        if (!isRegexEmail(postUserReq.getUserEmail())) {
-            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-        }
+//        //이메일 정규표현
+//        if (!isRegexEmail(postUserReq.getUserEmail())) {
+//            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+//        }
         // 비밀번호 최소길이
         if (postUserReq.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
@@ -87,20 +88,19 @@ public class UserController {
      * @return BaseResponse<PostLoginRes>
      */
     @PostMapping("/login")  // (POST) 127.0.0.1:9000/users/login
-    public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) throws BaseException {
+    public BaseResponse<PostUserRes> login(@Valid @RequestBody PostLoginReq postLoginReq) throws BaseException {
         if (postLoginReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
-        if (!isRegexEmail(postLoginReq.getUserEmail())) {
-            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-        }
+//        if (!isRegexEmail(postLoginReq.getUserEmail())) {
+//            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+//        }
         // 비밀번호 최소 길이
         if (postLoginReq.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
-        PostLoginRes postLoginRes = userService.login(postLoginReq);
-        return new BaseResponse<>(postLoginRes);
-
+        PostUserRes postUserRes = userService.login(postLoginReq);
+        return new BaseResponse<>(postUserRes);
     }
 
     /**
@@ -127,21 +127,21 @@ public class UserController {
      */
     @ResponseBody
     @PatchMapping("/detail")  // (GET) 127.0.0.1:9000/users/detail
-    public BaseResponse<PatchUserRes> editUser(@RequestBody User user) throws BaseException {
+    public BaseResponse<PostUserRes> editUser(@Valid @RequestBody User user) throws BaseException {
         if (user.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
         // 이메일 형식
-        if (!isRegexEmail(user.getUserEmail())) {
-            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-        }
+//        if (!isRegexEmail(user.getUserEmail())) {
+//            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+//        }
         // 비밀번호 최소길이
         if (user.getPassword().length() < 8) {
             return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
         //jwt에서 id 추출.
         int userId = jwtService.getUserId();
-        PatchUserRes patchUserRes = userService.editUser(userId, user);
+        PostUserRes patchUserRes = userService.editUser(userId, user);
         return new BaseResponse<>(patchUserRes);
     }
 
