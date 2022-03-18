@@ -13,13 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.POST_REVIEWS_EMPTY_CONTENT;
-
 @RestController
 @RequestMapping("/reviews")
 @AllArgsConstructor
 public class ReviewController {
-
     private final ReviewProvider reviewProvider;
     private final ReviewService reviewService;
     private final JwtService jwtService;
@@ -31,14 +28,10 @@ public class ReviewController {
      * @return BaseResponse<List < GetReviewRes>>
      */
     @GetMapping("")
-    public BaseResponse<List<GetReviewRes>> getMyReviews() {
-        try {
-            int userId = jwtService.getUserId();
-            List<GetReviewRes> getReviewRes = reviewProvider.getMyReviews(userId);
-            return new BaseResponse<>(getReviewRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<List<GetReviewRes>> getMyReviews() throws BaseException {
+        int userId = jwtService.getUserId();
+        List<GetReviewRes> getReviewRes = reviewProvider.getMyReviews(userId);
+        return new BaseResponse<>(getReviewRes);
     }
 
     /**
@@ -50,16 +43,9 @@ public class ReviewController {
      * @return BaseResponse<PostReviewRes>
      */
     @PostMapping("/{orderListId}/{restaurantId}")
-    public BaseResponse<PostReviewRes> createReview(@PathVariable("orderListId") int orderListId, @PathVariable("restaurantId") int restaurantId, @RequestBody PostReviewReq postReviewReq) {
-        if (postReviewReq.getContent() == null) {
-            return new BaseResponse<>(POST_REVIEWS_EMPTY_CONTENT);
-        }
-        try {
-            PostReviewRes postReviewRes = reviewService.createReview(orderListId, restaurantId, postReviewReq);
-            return new BaseResponse<>(postReviewRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
+    public BaseResponse<PostReviewRes> createReview(@PathVariable("orderListId") int orderListId, @PathVariable("restaurantId") int restaurantId, @RequestBody PostReviewReq postReviewReq) throws BaseException {
+        PostReviewRes postReviewRes = reviewService.createReview(orderListId, restaurantId, postReviewReq);
+        return new BaseResponse<>(postReviewRes);
     }
 
     /**
@@ -71,9 +57,6 @@ public class ReviewController {
      */
     @PostMapping("/{reviewId}/owner")
     public BaseResponse<PostReviewRes> createOwnerReview(@PathVariable("reviewId") int reviewId, @RequestBody PostOwnerReviewReq postOwnerReviewReq) throws BaseException {
-        if (postOwnerReviewReq.getContent() == null) {
-            return new BaseResponse<>(POST_REVIEWS_EMPTY_CONTENT);
-        }
         PostReviewRes ownerReview = reviewService.createOwnerReview(reviewId, postOwnerReviewReq);
         return new BaseResponse<>(ownerReview);
     }
@@ -99,9 +82,6 @@ public class ReviewController {
      */
     @PatchMapping("/{reviewId}")
     public BaseResponse<String> editReview(@PathVariable("reviewId") int reviewId, @RequestBody PatchReviewReq patchReviewReq) throws BaseException {
-        if (patchReviewReq.getContent() == null) {
-            return new BaseResponse<>(POST_REVIEWS_EMPTY_CONTENT);
-        }
         reviewService.editReview(reviewId, patchReviewReq);
         return new BaseResponse<>("");
     }

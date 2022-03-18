@@ -17,8 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/menu")
 public class MenuController {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final MenuProvider menuProvider;
 
     /**

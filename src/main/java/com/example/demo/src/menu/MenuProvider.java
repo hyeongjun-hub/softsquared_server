@@ -14,13 +14,11 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 @Service
 @AllArgsConstructor
 public class MenuProvider {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private final MenuDao menuDao;
+    private final MenuMapper menuMapper;
 
     public List<GetMenuRes> getMenu(int menuId) throws BaseException {
         try{
-            List<GetMenuRes> getMenuRes = menuDao.getMenu(menuId);
+            List<GetMenuRes> getMenuRes = menuMapper.getMenu(menuId);
             return getMenuRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
