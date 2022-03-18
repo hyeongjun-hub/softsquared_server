@@ -71,10 +71,6 @@ public class UserController {
         if (postUserReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
-        // 비밀번호 최소길이
-        if (postUserReq.getPassword().length() < 8) {
-            return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
-        }
         PostUserRes postUserRes = userService.createUser(postUserReq);
         return new BaseResponse<>(postUserRes);
     }
@@ -87,10 +83,6 @@ public class UserController {
     public BaseResponse<PostUserRes> login(@Valid @RequestBody PostLoginReq postLoginReq) throws BaseException {
         if (postLoginReq.getUserEmail() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
-        }
-        // 비밀번호 최소 길이
-        if (postLoginReq.getPassword().length() < 8) {
-            return new BaseResponse<>(POST_USERS_PASSWORD_MIN);
         }
         PostUserRes postUserRes = userService.login(postLoginReq);
         return new BaseResponse<>(postUserRes);

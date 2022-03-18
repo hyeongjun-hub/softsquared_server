@@ -23,12 +23,14 @@ public class RestControllerAdvice {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    // BaseException
     @ExceptionHandler({BaseException.class})
     public BaseResponse<Object> handleException(BaseException ex) {
         logger.warn("error", ex);
         return new BaseResponse<>(ex.getStatus());
     }
 
+    // Spring validation Exception
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
@@ -44,7 +46,6 @@ public class RestControllerAdvice {
 
         return validationErrorResponse;
     }
-
 
     // 400
     @ExceptionHandler({RuntimeException.class})
