@@ -26,7 +26,7 @@ public class RestControllerAdvice {
     // BaseException
     @ExceptionHandler({BaseException.class})
     public BaseResponse<Object> handleException(BaseException ex) {
-        logger.warn("error", ex);
+        logger.warn("error", ex.getMessage());
         return new BaseResponse<>(ex.getStatus());
     }
 
@@ -50,7 +50,7 @@ public class RestControllerAdvice {
     // 400
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<Object> BadRequestException(final RuntimeException ex) {
-        logger.warn("error", ex);
+        logger.warn("error", ex.getMessage());
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -34,7 +35,7 @@ public class UserService {
     }
 
     //POST
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
         //중복
         if(this.checkEmail(postUserReq.getUserEmail()) == 1){
@@ -49,7 +50,8 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            userMapper.createUser(postUserReq, "inApp");
+            postUserReq.setPlatform("inApp");
+            userMapper.createUser(postUserReq);
             int userId = postUserReq.getUserId();
             //jwt 발급.
             String jwt = jwtService.createJwt(userId);
@@ -59,7 +61,7 @@ public class UserService {
         }
     }
 
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public PostUserRes editUser(int userId, User user) throws BaseException {
         //status 값 확인
         if (!userMapper.getUserStatus(userId).equals("Y")) {
@@ -90,7 +92,7 @@ public class UserService {
         }
     }
 
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public void delUser(PostUserDelReq postUserDelReq) throws BaseException {
         try{
             userMapper.delUser(postUserDelReq);
@@ -124,7 +126,7 @@ public class UserService {
         }
     }
 
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public PostUserRes login(PostLoginReq postLoginReq) throws BaseException{
         User user = userMapper.getLoginUser(postLoginReq);
         //이메일 존재여부 확인
@@ -152,8 +154,7 @@ public class UserService {
         }
     }
 
-    // 수정 중
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public PostLoginRes kaKaoLogin(KaKaoUser kaKaoUser) throws BaseException {
         int userId;
         String jwt;
@@ -168,14 +169,14 @@ public class UserService {
                 throw new BaseException(USERS_INAPP_EXISTS); // 해당 이메일로 자체 이메일가입한 상태라면 카카오로그인, 가입 X, 자체로그인으로.
             }
         } else { // 가입이 되어 있지 않다면 가입 진행
-            PostUserReq kaKaoSignUp = new PostUserReq(kaKaoUser.getUserName(), kaKaoUser.getEmail(), "socialLogin", 0);
-            userId = userMapper.createUser(kaKaoSignUp, "KaKao"); // + KaKao
+            PostUserReq kaKaoSignUp = new PostUserReq(kaKaoUser.getUserName(), kaKaoUser.getEmail(), "socialLogin", "kaKao" ,0);
+            userId = userMapper.createUser(kaKaoSignUp); // + KaKao
             jwt = jwtService.createJwt(userId);
         }
         return new PostLoginRes(userId, jwt);
     }
 
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public int createAddress(int userId, PostAddressReq postAddressReq) throws BaseException {
         // 주소 중복 확인
         if(this.checkAddress(postAddressReq.getAddress()) == 1){
@@ -202,7 +203,7 @@ public class UserService {
         }
     }
 
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public void editAddress(int addressId, PatchAddressReq patchAddressReq) throws BaseException {
         String addressStatus = userMapper.getAddressStatus(addressId);
         //address status 값 확인
@@ -224,7 +225,7 @@ public class UserService {
         }
     }
 
-    @Transactional(rollbackFor = {BaseException.class})
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public void delAddress(int addressId) throws BaseException {
         String addressStatus = userMapper.getAddressStatus(addressId);
         //address status 값 확인
@@ -238,6 +239,7 @@ public class UserService {
         }
     }
 
+    @Transactional(rollbackFor = {BaseException.class, MethodArgumentNotValidException.class})
     public void logoutUser(int userId) throws BaseException {
         try{
             userMapper.logout(userId);

@@ -4,18 +4,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+public class BaeminCloneApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(BaeminCloneApplication.class, args);
 
         // 메모리 사용량 출력
         long heapSize = Runtime.getRuntime().totalMemory();
         System.out.println("HEAP Size(M) : "+ heapSize / (1024*1024) + " MB");
     }
-
-//    깃연동확인
-//    깃연동확인2
-//    깃연동확인3
 }

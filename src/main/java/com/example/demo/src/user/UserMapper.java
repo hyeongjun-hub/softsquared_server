@@ -20,7 +20,7 @@ public interface UserMapper {
 
     GetUserRes getUser(int userId);
 
-    int createUser(PostUserReq postUserReq, String platform);
+    int createUser(PostUserReq postUserReq);
 
     int checkEmail(String email);
 

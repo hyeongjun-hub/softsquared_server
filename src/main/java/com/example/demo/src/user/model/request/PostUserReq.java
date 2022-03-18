@@ -21,5 +21,6 @@ public class PostUserReq {
     @NotBlank(message = "비밀번호를 입력하세요.")
     @Length(min = 8, max = 20, message = "비밀번호 길이를 확인해주세요")
     private String password;
+    private String platform;
     private int userId;
 }
