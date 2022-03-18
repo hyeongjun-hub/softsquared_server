@@ -16,8 +16,6 @@ import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 public class CategoryProvider {
     private final CategoryMapper categoryMapper;
 
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public List<GetCategoryRes> getCategories() throws BaseException{
         try{
             List<GetCategoryRes> getCategoriesRes = categoryMapper.getCategories();

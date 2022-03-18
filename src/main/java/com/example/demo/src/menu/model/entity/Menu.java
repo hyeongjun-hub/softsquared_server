@@ -12,7 +12,7 @@ public class Menu {
     private int bigMenuId;
     private String menuName;
     private int price;
-    private String populer;
+    private String popular;
     private String menuDetail;
     private String menuSummary;
     private String menuImageUrl;

@@ -12,14 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
 @AllArgsConstructor
 public class OrderController {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final OrderProvider orderProvider;
     private final OrderService orderService;
     private final JwtService jwtService;
@@ -31,7 +30,7 @@ public class OrderController {
      * @return BaseResponse<Integer>
      */
     @PostMapping("/new")
-    public BaseResponse<Integer> createOrder(@RequestBody PostOrderReq postOrderReq) throws BaseException {
+    public BaseResponse<Integer> createOrder(@Valid @RequestBody PostOrderReq postOrderReq) throws BaseException {
         int userId = jwtService.getUserId();
         int resultInt = orderService.createOrder(userId, postOrderReq);
         return new BaseResponse<>(resultInt);
